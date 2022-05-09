@@ -1,0 +1,10 @@
+C:/Users/vande/Desktop/PicoGine/CMakeFiles/PACKAGE.dir
+C:/Users/vande/Desktop/PicoGine/CMakeFiles/INSTALL.dir
+C:/Users/vande/Desktop/PicoGine/CMakeFiles/ALL_BUILD.dir
+C:/Users/vande/Desktop/PicoGine/CMakeFiles/ZERO_CHECK.dir
+C:/Users/vande/Desktop/PicoGine/Engine/CMakeFiles/Engine.dir
+C:/Users/vande/Desktop/PicoGine/Engine/CMakeFiles/PACKAGE.dir
+C:/Users/vande/Desktop/PicoGine/Engine/CMakeFiles/INSTALL.dir
+C:/Users/vande/Desktop/PicoGine/Game/CMakeFiles/Game.dir
+C:/Users/vande/Desktop/PicoGine/Game/CMakeFiles/PACKAGE.dir
+C:/Users/vande/Desktop/PicoGine/Game/CMakeFiles/INSTALL.dir
