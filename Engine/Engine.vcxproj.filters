@@ -11,6 +11,16 @@
   <ItemGroup>
     <Filter Include="Source Files">
       <UniqueIdentifier>{78A13801-E55A-346D-AF88-8B70C07D3EBD}</UniqueIdentifier>
+	  <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{17648611-f443-4c4e-961e-851bb678290f}</UniqueIdentifier>
+	  <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -4,11 +4,14 @@ project(PicoGine)
 add_subdirectory(Engine)
 add_subdirectory(Game)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /W4 /WX")
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Game)
+
 message(STATUS "include directory: ${PROJECT_SOURCE_DIR}")
 
 target_include_directories(Game PUBLIC "${PROJECT_BINARY_DIR}" "${EngineIncludeDir}")
 	
-install(TARGETS PicoGine DESTINATION bin)
+install(TARGETS Engine DESTINATION bin)
 
 include(InstallRequiredSystemLibraries)
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
