@@ -6,4 +6,5 @@ void Engine::Run()
 	std::cout << "Hello world from the engine" << std::endl;
 	Test test;
 	test.Foo();
+	std::cin.get();
 }
