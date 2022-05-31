@@ -2,6 +2,6 @@
 
 #pragma system_header
 #ifdef __cplusplus
-#include "C:/Users/vande/Desktop/PicoGine/Game/GamePCH.h"
-#include "C:/Users/vande/Desktop/PicoGine/Engine/EnginePCH.h"
+#include "C:/Users/vande/Desktop/PicoGine/Game/./GamePCH.h"
+#include "C:/Users/vande/Desktop/PicoGine/Engine/./EnginePCH.h"
 #endif // __cplusplus
