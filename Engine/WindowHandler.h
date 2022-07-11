@@ -5,6 +5,8 @@
 
 #include "Singleton.h"
 
+LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 class WindowHandler final : public Singleton<WindowHandler>
 {
 public:
@@ -18,7 +20,14 @@ public:
 	bool ProcessMessages();
 
 private:
-	HINSTANCE m_hInstance;
-	HWND m_hWnd;
+	/* DATAMEMBERS */
+	HINSTANCE m_HInstance;
+	HWND m_HWnd;
+
+	const wchar_t* CLASS_NAME{ L"PicoGineClass" };
+	const unsigned short m_WindowWidth{ 1280 };
+	const unsigned short m_WindowHeight{ 720 };
+
+	/* PRIVATE METHODS */
 };
 
