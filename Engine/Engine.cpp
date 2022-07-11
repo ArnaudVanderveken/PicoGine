@@ -1,8 +1,7 @@
 #include "Engine.h"
-#include "Test.h"
 #include "WindowHandler.h"
 
-using std::cout, std::cin, std::endl;
+using std::cout, std::endl;
 
 void Engine::Run()
 {

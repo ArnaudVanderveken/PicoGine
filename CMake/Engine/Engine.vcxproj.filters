@@ -7,9 +7,6 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -22,9 +19,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Singleton.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowHandler.h">
