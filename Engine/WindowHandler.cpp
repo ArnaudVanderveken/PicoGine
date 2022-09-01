@@ -11,6 +11,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
+
+	default:
+		break;
 	}
 
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -36,25 +39,18 @@ WindowHandler::WindowHandler()
 
 	RegisterClassEx(&wndClass);
 
+	//Create Window
 	constexpr DWORD style{ WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU };
-
-	RECT rect;
-	rect.left = 100;
-	rect.top = 100;
-	rect.right = rect.left + m_WindowWidth;
-	rect.bottom = rect.top + m_WindowHeight;
-
-	AdjustWindowRect(&rect, style, false);
 
 	m_HWnd = CreateWindowEx(
 		NULL,
 		CLASS_NAME,
 		L"PicoGine",
 		style,
-		rect.left,
-		rect.top,
-		rect.right - rect.left,
-		rect.bottom - rect.top,
+		m_WindowTop,
+		m_WindowLeft,
+		m_WindowWidth,
+		m_WindowHeight,
 		nullptr,
 		nullptr,
 		m_HInstance,

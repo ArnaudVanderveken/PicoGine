@@ -27,6 +27,8 @@ private:
 	HWND m_HWnd;
 
 	const wchar_t* CLASS_NAME{ L"PicoGineClass" };
+	const unsigned short m_WindowTop{ 100 };
+	const unsigned short m_WindowLeft{ 100 };
 	const unsigned short m_WindowWidth{ 1280 };
 	const unsigned short m_WindowHeight{ 720 };
 
