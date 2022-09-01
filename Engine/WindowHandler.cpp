@@ -34,7 +34,7 @@ WindowHandler::WindowHandler()
 	wndClass.hCursor = nullptr;
 	wndClass.hbrBackground = nullptr;
 	wndClass.lpszMenuName = nullptr;
-	wndClass.lpszClassName = CLASS_NAME;
+	wndClass.lpszClassName = m_ClassName;
 	wndClass.hIconSm = nullptr;
 
 	RegisterClassEx(&wndClass);
@@ -44,7 +44,7 @@ WindowHandler::WindowHandler()
 
 	m_HWnd = CreateWindowEx(
 		NULL,
-		CLASS_NAME,
+		m_ClassName,
 		L"PicoGine",
 		style,
 		m_WindowTop,
@@ -62,20 +62,30 @@ WindowHandler::WindowHandler()
 
 WindowHandler::~WindowHandler()
 {
-	UnregisterClass(CLASS_NAME, m_HInstance);
+	UnregisterClass(m_ClassName, m_HInstance);
 }
 
 bool WindowHandler::ProcessMessages()
 {
 	MSG msg{};
-
-	while (PeekMessage(&msg, nullptr, 0u, 0u, PM_REMOVE))
+	BOOL msgResult;
+	
+	while ((msgResult = PeekMessage(&msg, nullptr, 0u, 0u, PM_REMOVE)) > 0)
 	{
 		if (msg.message == WM_QUIT)
+		{
+			m_ExitCode = int(msg.wParam);
 			return false;
+		}
 
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
+	}
+
+	if (msgResult == -1)
+	{
+		m_ExitCode = -1;
+		return false;
 	}
 
 	return true;
@@ -89,4 +99,9 @@ HWND WindowHandler::GetHandle() const
 HINSTANCE WindowHandler::GetInstance() const
 {
 	return m_HInstance;
+}
+
+int WindowHandler::GetExitCode() const
+{
+	return m_ExitCode;
 }

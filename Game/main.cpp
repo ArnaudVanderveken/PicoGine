@@ -1,8 +1,9 @@
 #include "Engine.h"
+#include "WindowHandler.h"
 
 int main()
 {
 	Engine e;
 	e.Run();
-	return 0;
+	return WindowHandler::Get().GetExitCode();
 }

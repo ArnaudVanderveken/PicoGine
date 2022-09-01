@@ -20,13 +20,16 @@ public:
 	bool ProcessMessages();
 	[[nodiscard]] HWND GetHandle() const;
 	[[nodiscard]] HINSTANCE GetInstance() const;
+	[[nodiscard]] int GetExitCode() const;
 
 private:
 	/* DATAMEMBERS */
 	HINSTANCE m_HInstance;
 	HWND m_HWnd;
 
-	const wchar_t* CLASS_NAME{ L"PicoGineClass" };
+	int m_ExitCode{};
+
+	const wchar_t* m_ClassName{ L"PicoGineClass" };
 	const unsigned short m_WindowTop{ 100 };
 	const unsigned short m_WindowLeft{ 100 };
 	const unsigned short m_WindowWidth{ 1280 };
