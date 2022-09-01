@@ -18,6 +18,8 @@ public:
 	WindowHandler& operator=(WindowHandler&&) noexcept = delete;
 
 	bool ProcessMessages();
+	[[nodiscard]] HWND GetHandle() const;
+	[[nodiscard]] HINSTANCE GetInstance() const;
 
 private:
 	/* DATAMEMBERS */

@@ -19,16 +19,24 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 WindowHandler::WindowHandler()
 	: m_HInstance{ GetModuleHandle(nullptr) }
 {
-	WNDCLASS wndClass{};
-	wndClass.lpszClassName = CLASS_NAME;
-	wndClass.hInstance = m_HInstance;
-	wndClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	//Register window class
+	WNDCLASSEX wndClass{};
+	wndClass.cbSize = sizeof(wndClass);
+	wndClass.style = CS_OWNDC;
 	wndClass.lpfnWndProc = WindowProc;
+	wndClass.cbClsExtra = 0;
+	wndClass.cbWndExtra = 0;
+	wndClass.hInstance = m_HInstance;
+	wndClass.hIcon = nullptr;
+	wndClass.hCursor = nullptr;
+	wndClass.hbrBackground = nullptr;
+	wndClass.lpszMenuName = nullptr;
+	wndClass.lpszClassName = CLASS_NAME;
+	wndClass.hIconSm = nullptr;
 
-	RegisterClass(&wndClass);
+	RegisterClassEx(&wndClass);
 
-	DWORD style{ WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU };
+	constexpr DWORD style{ WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU };
 
 	RECT rect;
 	rect.left = 100;
@@ -47,10 +55,10 @@ WindowHandler::WindowHandler()
 		rect.top,
 		rect.right - rect.left,
 		rect.bottom - rect.top,
-		NULL,
-		NULL,
+		nullptr,
+		nullptr,
 		m_HInstance,
-		NULL
+		nullptr
 	);
 
 	ShowWindow(m_HWnd, SW_SHOW);
@@ -75,4 +83,14 @@ bool WindowHandler::ProcessMessages()
 	}
 
 	return true;
+}
+
+HWND WindowHandler::GetHandle() const
+{
+	return m_HWnd;
+}
+
+HINSTANCE WindowHandler::GetInstance() const
+{
+	return m_HInstance;
 }
