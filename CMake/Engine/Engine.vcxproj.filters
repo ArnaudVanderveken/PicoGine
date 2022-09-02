@@ -12,6 +12,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CleanedWindows.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\EnginePCH.h">
       <Filter>Header Files</Filter>
     </ClInclude>

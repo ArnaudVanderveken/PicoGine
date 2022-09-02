@@ -287,6 +287,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/Engine.dir/RelWithDebInfo/cmake_pch.pch</PrecompiledHeaderOutputFile>
     </ClCompile>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CleanedWindows.h" />
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\EnginePCH.h" />
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.h" />
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">

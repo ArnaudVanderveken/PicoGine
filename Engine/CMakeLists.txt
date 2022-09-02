@@ -1,4 +1,5 @@
 add_library(Engine 
+	CleanedWindows.h 
 	EnginePCH.h
 	Engine.h Engine.cpp
 	Singleton.h
