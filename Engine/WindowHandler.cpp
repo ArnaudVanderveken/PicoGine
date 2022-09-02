@@ -39,22 +39,31 @@ WindowHandler::WindowHandler()
 
 	RegisterClassEx(&wndClass);
 
-	//Create Window
+	//Create Window Style
 	constexpr DWORD style{ WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU };
 
+	//Adjust Window Dimensions
+	RECT wr{};
+	wr.left = m_WindowLeft;
+	wr.right = m_WindowLeft + m_WindowWidth;
+	wr.top = m_WindowTop;
+	wr.bottom = m_WindowTop + m_WindowHeight;
+	AdjustWindowRect(&wr, style, FALSE);
+
+	//Create Window
 	m_HWnd = CreateWindowEx(
 		NULL,
 		m_ClassName,
 		L"PicoGine",
 		style,
-		m_WindowTop,
-		m_WindowLeft,
-		m_WindowWidth,
-		m_WindowHeight,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		wr.right - wr.left,
+		wr.bottom - wr.top,
 		nullptr,
 		nullptr,
 		m_HInstance,
-		nullptr
+		this
 	);
 
 	ShowWindow(m_HWnd, SW_SHOW);
