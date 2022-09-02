@@ -4,12 +4,10 @@
 
 #include "Singleton.h"
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 class WindowHandler final : public Singleton<WindowHandler>
 {
 public:
-	WindowHandler();
+	WindowHandler() noexcept;
 	~WindowHandler() override;
 	WindowHandler(const WindowHandler&) = delete;
 	WindowHandler& operator=(const WindowHandler&) = delete;
@@ -17,9 +15,9 @@ public:
 	WindowHandler& operator=(WindowHandler&&) noexcept = delete;
 
 	bool ProcessMessages();
-	[[nodiscard]] HWND GetHandle() const;
-	[[nodiscard]] HINSTANCE GetInstance() const;
-	[[nodiscard]] int GetExitCode() const;
+	[[nodiscard]] HWND GetHandle() const noexcept;
+	[[nodiscard]] HINSTANCE GetInstance() const noexcept;
+	[[nodiscard]] int GetExitCode() const noexcept;
 
 private:
 	/* DATAMEMBERS */
@@ -35,5 +33,8 @@ private:
 	const unsigned short m_WindowHeight{ 720 };
 
 	/* PRIVATE METHODS */
+	static LRESULT CALLBACK MsgHandlerSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept;
+	static LRESULT CALLBACK MsgHandlerAdapter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept;
+	LRESULT MsgHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept;
 };
 

@@ -1,32 +1,14 @@
 #include "WindowHandler.h"
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_CLOSE:
-		DestroyWindow(hWnd);
-		break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		return 0;
-
-	default:
-		break;
-	}
-
-	return DefWindowProc(hWnd, uMsg, wParam, lParam);
-}
-
-WindowHandler::WindowHandler()
+WindowHandler::WindowHandler() noexcept
 	: m_HInstance{ GetModuleHandle(nullptr) }
 {
 	//Register window class
 	WNDCLASSEX wndClass{};
 	wndClass.cbSize = sizeof(wndClass);
 	wndClass.style = CS_OWNDC;
-	wndClass.lpfnWndProc = WindowProc;
+	wndClass.lpfnWndProc = MsgHandlerSetup;
 	wndClass.cbClsExtra = 0;
 	wndClass.cbWndExtra = 0;
 	wndClass.hInstance = m_HInstance;
@@ -71,6 +53,7 @@ WindowHandler::WindowHandler()
 
 WindowHandler::~WindowHandler()
 {
+	DestroyWindow(m_HWnd);
 	UnregisterClass(m_ClassName, m_HInstance);
 }
 
@@ -100,17 +83,59 @@ bool WindowHandler::ProcessMessages()
 	return true;
 }
 
-HWND WindowHandler::GetHandle() const
+HWND WindowHandler::GetHandle() const noexcept
 {
 	return m_HWnd;
 }
 
-HINSTANCE WindowHandler::GetInstance() const
+HINSTANCE WindowHandler::GetInstance() const noexcept
 {
 	return m_HInstance;
 }
 
-int WindowHandler::GetExitCode() const
+int WindowHandler::GetExitCode() const noexcept
 {
 	return m_ExitCode;
+}
+
+LRESULT CALLBACK WindowHandler::MsgHandlerSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	//Executed once upon window creation
+	if (uMsg == WM_NCCREATE)
+	{
+		//Extract pointer to WindowHandler class instance
+		const CREATESTRUCTW* const pCreateStruct = reinterpret_cast<CREATESTRUCTW*>(lParam);
+		auto* const pWnd = static_cast<WindowHandler*>(pCreateStruct->lpCreateParams);
+		//Set WinAPI-managed user data to store that WindowHandler pointer
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+		//Set WndProc to normal MessageHandler
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&WindowHandler::MsgHandlerAdapter));
+		//Forward message to class MsgHandler
+		return pWnd->MsgHandler(hWnd, uMsg, wParam, lParam);
+	}
+
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK WindowHandler::MsgHandlerAdapter(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	//Retrieve ptr to WindowHandler inst
+	auto* const pWnd = reinterpret_cast<WindowHandler*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+	//Forward message to class MsgHandler
+	return pWnd->MsgHandler(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT WindowHandler::MsgHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept
+{
+	switch (uMsg)
+	{
+	case WM_CLOSE:
+		PostQuitMessage(0);
+		return 0;
+
+	default:
+		break;
+	}
+
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

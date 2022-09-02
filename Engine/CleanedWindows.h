@@ -26,12 +26,17 @@
 #define NOSOUND
 #define NOTEXTMETRIC
 #define NOWH
-#define NOWINOFFSETS
 #define NOCOMM
 #define NOKANJI
 #define NOHELP
 #define NOPROFILER
 #define NODEFERWINDOWPOS
 #define NOMCX
+#define NORPC
+#define NOPROXYSTUB
+#define NOIMAGE
+#define NOTAPE
+
+#define STRICT
 
 #include <Windows.h>

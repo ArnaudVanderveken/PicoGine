@@ -10,6 +10,7 @@ void Engine::Run()
 	bool running{ true };
 	while (running)
 	{
+		//Process Windows messages
 		if (!WindowHandler::Get().ProcessMessages())
 		{
 			cout << "ClosingWindow" << endl;
