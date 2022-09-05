@@ -4,6 +4,7 @@ add_library(Engine
 	Engine.h Engine.cpp
 	PicoGineException.h PicoGineException.cpp
 	Singleton.h
+	WindowsException.h WindowsException.cpp
 	WindowHandler.h WindowHandler.cpp
 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /W4 /WX")

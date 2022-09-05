@@ -7,7 +7,7 @@
 class WindowHandler final : public Singleton<WindowHandler>
 {
 public:
-	WindowHandler() noexcept;
+	WindowHandler();
 	~WindowHandler() override;
 	WindowHandler(const WindowHandler&) = delete;
 	WindowHandler& operator=(const WindowHandler&) = delete;

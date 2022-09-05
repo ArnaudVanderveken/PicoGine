@@ -1,8 +1,10 @@
 #include "WindowHandler.h"
+#include "WindowsException.h"
 
 
-WindowHandler::WindowHandler() noexcept
+WindowHandler::WindowHandler()
 	: m_HInstance{ GetModuleHandle(nullptr) }
+	, m_HWnd{}
 {
 	//Register window class
 	WNDCLASSEX wndClass{};
@@ -30,7 +32,8 @@ WindowHandler::WindowHandler() noexcept
 	wr.right = m_WindowLeft + m_WindowWidth;
 	wr.top = m_WindowTop;
 	wr.bottom = m_WindowTop + m_WindowHeight;
-	AdjustWindowRect(&wr, style, FALSE);
+	if (FAILED(AdjustWindowRect(&wr, style, FALSE)))
+		throw PGWND_LAST_EXCEPTION();
 
 	//Create Window
 	m_HWnd = CreateWindowEx(
@@ -47,6 +50,8 @@ WindowHandler::WindowHandler() noexcept
 		m_HInstance,
 		this
 	);
+	if (!m_HWnd)
+		throw PGWND_LAST_EXCEPTION();
 
 	ShowWindow(m_HWnd, SW_SHOW);
 }

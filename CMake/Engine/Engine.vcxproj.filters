@@ -7,7 +7,10 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\CMake\Engine\PicoGineException.cpp">
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowsException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowHandler.cpp">
@@ -24,10 +27,13 @@
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\CMake\Engine\PicoGineException.h">
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Singleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowsException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\WindowHandler.h">
