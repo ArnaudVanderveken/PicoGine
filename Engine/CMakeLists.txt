@@ -2,6 +2,7 @@ add_library(Engine
 	CleanedWindows.h 
 	EnginePCH.h
 	Engine.h Engine.cpp
+	InputManager.h InputManager.cpp
 	PicoGineException.h PicoGineException.cpp
 	Singleton.h
 	WindowsException.h WindowsException.cpp

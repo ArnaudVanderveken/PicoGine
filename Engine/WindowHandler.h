@@ -15,6 +15,7 @@ public:
 	WindowHandler& operator=(WindowHandler&&) noexcept = delete;
 
 	bool ProcessMessages();
+	void SetWindowTitle(const std::wstring& title) const;
 	[[nodiscard]] HWND GetHandle() const noexcept;
 	[[nodiscard]] HINSTANCE GetInstance() const noexcept;
 	[[nodiscard]] int GetExitCode() const noexcept;

@@ -2,7 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define NOGDICAPMASKS
-#define NOVIRTUALKEYCODES
+//#define NOVIRTUALKEYCODES
 #define NOSYSMETRICS
 #define NOMENUS
 #define NOICONS
@@ -14,7 +14,7 @@
 #define NOCOLOR
 #define NOCTLMGR
 #define NODRAWTEXT
-#define NOGDI
+//#define NOGDI
 #define NOKERNEL
 #define NONLS
 #define NOMEMMGR

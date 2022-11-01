@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -25,6 +28,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.h">

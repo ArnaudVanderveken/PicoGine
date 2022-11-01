@@ -11,3 +11,4 @@
 #define __WFILE__ WIDE1(__FILE__)
 
 #include <iostream>
+#include <sstream>
