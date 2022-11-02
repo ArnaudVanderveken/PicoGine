@@ -4,6 +4,7 @@ add_library(Engine
 	Engine.h Engine.cpp
 	InputManager.h InputManager.cpp
 	PicoGineException.h PicoGineException.cpp
+	Renderer.h Renderer.cpp
 	Singleton.h
 	WindowsException.h WindowsException.cpp
 	WindowHandler.h WindowHandler.cpp
