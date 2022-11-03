@@ -51,6 +51,7 @@ private:
 	ComPtr<ID3D11Device> m_pDevice{};
 	ComPtr<IDXGISwapChain> m_pSwapChain{};
 	ComPtr<ID3D11DeviceContext> m_pDeviceContext{};
+	ComPtr<ID3D11RenderTargetView> m_pRenderTargetView{};
 
 	/* PRIVATE METHODS */
 	
@@ -95,11 +96,16 @@ Renderer::DirectX11::DirectX11(HWND hwnd) noexcept
 		nullptr,
 		&m_pDeviceContext
 	);
+
+	ID3D11Resource* pBackBuffer{};
+	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer));
+	m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView);
+	pBackBuffer->Release();
 }
 
 void Renderer::DirectX11::BeginFrame() const
 {
-
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), Renderer::s_DefaultBackgroundColor);
 }
 
 void Renderer::DirectX11::EndFrame() const
