@@ -11,4 +11,6 @@
 #define __WFILE__ WIDE1(__FILE__)
 
 #include <iostream>
+#include <memory>
 #include <sstream>
+#include <wrl.h> //ComPtr

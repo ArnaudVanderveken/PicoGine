@@ -1,4 +1,6 @@
 #include "Engine.h"
+
+#include "Renderer.h"
 #include "WindowHandler.h"
 
 using std::cout, std::endl;
@@ -6,6 +8,9 @@ using std::cout, std::endl;
 void Engine::Run()
 {
 	cout << "Creating window" << endl;
+
+	//Initialization
+	Renderer::Get().Init();
 
 	bool running{ true };
 	while (running)
@@ -18,6 +23,8 @@ void Engine::Run()
 		}
 
 		//Render
+		Renderer::Get().BeginFrame();
+		Renderer::Get().EndFrame();
 
 		Sleep(10);
 	}

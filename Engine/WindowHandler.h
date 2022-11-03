@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CleanedWindows.h"
-
 #include "Singleton.h"
 
 class WindowHandler final : public Singleton<WindowHandler>
