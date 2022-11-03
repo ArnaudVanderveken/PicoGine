@@ -3,6 +3,7 @@
 #include "CleanedWindows.h"
 #include <d3d11.h>
 #pragma comment (lib, "d3d11.lib")
+#include "WindowsException.h"
 #include "WindowHandler.h"
 
 using Microsoft::WRL::ComPtr;
@@ -35,7 +36,7 @@ private:
 class Renderer::DirectX11 final : public RendererImpl
 {
 public:
-	explicit DirectX11(HWND hwnd) noexcept;
+	explicit DirectX11(HWND hwnd);
 	~DirectX11() override = default;
 
 	DirectX11(const DirectX11& other) noexcept = delete;
@@ -62,7 +63,7 @@ Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
 {
 }
 
-Renderer::DirectX11::DirectX11(HWND hwnd) noexcept
+Renderer::DirectX11::DirectX11(HWND hwnd)
 	: RendererImpl{ hwnd }
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
@@ -82,11 +83,16 @@ Renderer::DirectX11::DirectX11(HWND hwnd) noexcept
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
 
-	D3D11CreateDeviceAndSwapChain(
+	UINT flags{};
+#ifdef _DEBUG
+	flags = D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+	PGWND_THROW_IF_FAILED(D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
-		0,
+		flags,
 		nullptr,
 		0,
 		D3D11_SDK_VERSION,
@@ -95,11 +101,11 @@ Renderer::DirectX11::DirectX11(HWND hwnd) noexcept
 		&m_pDevice,
 		nullptr,
 		&m_pDeviceContext
-	);
+	));
 
 	ID3D11Resource* pBackBuffer{};
-	m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer));
-	m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView);
+	PGWND_THROW_IF_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pBackBuffer)));
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
 	pBackBuffer->Release();
 }
 
@@ -110,7 +116,7 @@ void Renderer::DirectX11::BeginFrame() const
 
 void Renderer::DirectX11::EndFrame() const
 {
-	m_pSwapChain->Present(1u, 0u);
+	PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
 }
 
 Renderer::~Renderer()

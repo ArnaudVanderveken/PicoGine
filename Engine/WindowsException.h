@@ -3,6 +3,7 @@
 #include "PicoGineException.h"
 
 #define PGWND_EXCEPTION(hr) WindowsException(__LINE__, __WFILE__, hr)
+#define PGWND_THROW_IF_FAILED(hr) if (FAILED(hr)) throw WindowsException(__LINE__, __WFILE__, hr)
 #define PGWND_LAST_EXCEPTION() WindowsException(__LINE__, __WFILE__, GetLastError())
 #define BUFFER_SIZE 512
 
