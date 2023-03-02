@@ -6,6 +6,7 @@ add_library(Engine
 	PicoGineException.h PicoGineException.cpp
 	Renderer.h Renderer.cpp
 	Singleton.h
+	TimeManager.h TimeManager.cpp
 	WindowsException.h WindowsException.cpp
 	WindowHandler.h WindowHandler.cpp
 )

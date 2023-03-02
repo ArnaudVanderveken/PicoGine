@@ -106,7 +106,6 @@ Renderer::DirectX11::DirectX11(HWND hwnd)
 	ComPtr<ID3D11Resource> pBackBuffer{};
 	PGWND_THROW_IF_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
-	pBackBuffer->Release();
 }
 
 void Renderer::DirectX11::BeginFrame() const
