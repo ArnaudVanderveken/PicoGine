@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\GameScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -14,6 +17,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TimeManager.cpp">
@@ -36,6 +42,9 @@
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\GameScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -43,6 +52,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\SceneManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Singleton.h">

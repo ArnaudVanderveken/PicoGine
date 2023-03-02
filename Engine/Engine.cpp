@@ -2,8 +2,9 @@
 
 #include <thread>
 
-#include "TimeManager.h"
 #include "Renderer.h"
+#include "SceneManager.h"
+#include "TimeManager.h"
 #include "WindowHandler.h"
 
 using std::cout, std::endl;
@@ -13,13 +14,14 @@ void Engine::Run()
 	cout << "Creating window" << endl;
 
 	/* --- REFERENCES --- */
-	auto& time = TimeManager::Get();
 	auto& renderer = Renderer::Get();
+	auto& sceneManager = SceneManager::Get();
+	auto& time = TimeManager::Get();
 
 	/* --- INITIALIZATION --- */
-	time.Init();
 	renderer.Init();
-	//TODO init the scene
+	sceneManager.Init();
+	time.Init();
 
 	bool running{ true };
 	float lag{};
@@ -41,19 +43,19 @@ void Engine::Run()
 		lag += time.GetElapsedTime();
 		while (lag >= time.GetFixedTimeStep())
 		{
-			//TODO Fixed update the scene
+			sceneManager.FixedUpdate();
 			lag -= time.GetFixedTimeStep();
 		}
 
 		/* --- UPDATE --- */
-		//TODO update the scene
+		sceneManager.Update();
 
 		/* --- LATE UPDATE --- */
-		//TODO late update the scene
+		sceneManager.LateUpdate();
 
 		/* --- RENDER --- */
 		renderer.BeginFrame();
-		//TODO render the scene
+		sceneManager.Render();
 		renderer.EndFrame();
 
 		cout << 1.0f / time.GetElapsedTime() << endl;

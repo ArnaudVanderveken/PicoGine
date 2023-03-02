@@ -2,9 +2,11 @@ add_library(Engine
 	CleanedWindows.h 
 	EnginePCH.h
 	Engine.h Engine.cpp
+	GameScene.h GameScene.cpp
 	InputManager.h InputManager.cpp
 	PicoGineException.h PicoGineException.cpp
 	Renderer.h Renderer.cpp
+	SceneManager.h SceneManager.cpp
 	Singleton.h
 	TimeManager.h TimeManager.cpp
 	WindowsException.h WindowsException.cpp
