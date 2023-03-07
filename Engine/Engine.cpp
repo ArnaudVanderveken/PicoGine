@@ -8,6 +8,7 @@
 #include "WindowHandler.h"
 
 using std::cout, std::endl;
+using std::chrono::duration_cast, std::chrono::milliseconds;
 
 void Engine::Run()
 {
@@ -58,8 +59,6 @@ void Engine::Run()
 		sceneManager.Render();
 		renderer.EndFrame();
 
-		cout << 1.0f / time.GetElapsedTime() << endl;
-
-		std::this_thread::sleep_for(TimeManager::Get().GetTimeToNextFrame());
+		std::this_thread::sleep_for(duration_cast<milliseconds>(TimeManager::Get().GetTimeToNextFrame()));
 	}
 }
