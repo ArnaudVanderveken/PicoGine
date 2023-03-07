@@ -24,8 +24,10 @@ void Engine::Run()
 	sceneManager.Init();
 	time.Init();
 
+	/* --- GAME LOOP --- */
 	bool running{ true };
 	float lag{};
+	const float fixedTimeStep{ time.GetFixedTimeStep() };
 	while (running)
 	{
 		/* --- TIME --- */
@@ -42,10 +44,10 @@ void Engine::Run()
 
 		/* --- FIXED UPDATE --- */
 		lag += time.GetElapsedTime();
-		while (lag >= time.GetFixedTimeStep())
+		while (lag >= fixedTimeStep)
 		{
 			sceneManager.FixedUpdate();
-			lag -= time.GetFixedTimeStep();
+			lag -= fixedTimeStep;
 		}
 
 		/* --- UPDATE --- */
@@ -59,6 +61,8 @@ void Engine::Run()
 		sceneManager.Render();
 		renderer.EndFrame();
 
-		std::this_thread::sleep_for(duration_cast<milliseconds>(TimeManager::Get().GetTimeToNextFrame()));
+		cout << 1 / time.GetElapsedTime() << endl;
+
+		std::this_thread::sleep_for(duration_cast<milliseconds>(time.GetTimeToNextFrame()));
 	}
 }

@@ -115,7 +115,7 @@ void Renderer::DirectX11::BeginFrame() const
 
 void Renderer::DirectX11::EndFrame() const
 {
-	PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
+	PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));
 }
 
 Renderer::~Renderer()
