@@ -18,7 +18,7 @@ private:
 	friend class Singleton<TimeManager>;
 	TimeManager() noexcept = default;
 
-	float m_FixedTimeStep{ 0.002f };
+	const float m_FixedTimeStep{ 0.002f };
 	float m_TimePerFrame{ 1.f / 144.f };
 
 	float m_DeltaTime{};
@@ -27,7 +27,7 @@ private:
 	std::chrono::steady_clock::time_point m_StartTime{};
 	std::chrono::steady_clock::time_point m_FrameBeginTime{};
 	std::chrono::steady_clock::time_point m_LastFrameBeginTime{};
-	std::chrono::steady_clock::time_point m_CurrentTime{};
+	std::chrono::steady_clock::time_point m_FrameEndTime{};
 	
 };
 

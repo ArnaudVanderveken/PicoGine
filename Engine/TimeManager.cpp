@@ -28,8 +28,8 @@ float TimeManager::GetTotalTime() const
 
 std::chrono::duration<float> TimeManager::GetTimeToNextFrame()
 {
-	m_CurrentTime = high_resolution_clock::now();
-	return duration<float>(m_TimePerFrame - duration<float>(m_CurrentTime - m_FrameBeginTime).count());
+	m_FrameEndTime = high_resolution_clock::now();
+	return duration<float>(m_TimePerFrame - duration<float>(m_FrameEndTime - m_FrameBeginTime).count());
 }
 
 float TimeManager::GetFixedTimeStep() const
