@@ -26,11 +26,11 @@ float TimeManager::GetTotalTime() const
 	return m_TotalTime;
 }
 
-std::chrono::duration<float> TimeManager::GetTimeToNextFrame()
-{
-	m_FrameEndTime = high_resolution_clock::now();
-	return duration<float>(m_TimePerFrame - duration<float>(m_FrameEndTime - m_FrameBeginTime).count());
-}
+//std::chrono::duration<float> TimeManager::GetTimeToNextFrame()
+//{
+//	m_FrameEndTime = high_resolution_clock::now();
+//	return duration<float>(m_TimePerFrame - duration<float>(m_FrameEndTime - m_FrameBeginTime).count());
+//}
 
 float TimeManager::GetFixedTimeStep() const
 {
