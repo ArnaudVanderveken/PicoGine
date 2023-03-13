@@ -5,10 +5,10 @@
 #include "GameScene.h"
 #include "Singleton.h"
 
-class SceneManager final: public Singleton<SceneManager>
+class SceneManager final : public Singleton<SceneManager>
 {
 public:
-	~SceneManager() override = default;
+	~SceneManager() override;
 
 	SceneManager(const SceneManager& other) noexcept = delete;
 	SceneManager& operator=(const SceneManager& other) noexcept = delete;
@@ -21,11 +21,14 @@ public:
 	void LateUpdate() const;
 	void Render() const;
 
+	uint32_t AddScene(GameScene* scene);
+	void SetActiveScene(uint32_t sceneIndex);
+
 private:
 	friend class Singleton<SceneManager>;
 	SceneManager() noexcept = default;
 
-	std::vector<std::unique_ptr<GameScene>> m_Scenes;
-	
-};
+	std::vector<GameScene*> m_Scenes;
+	uint32_t m_ActiveSceneIndex{};
 
+};
