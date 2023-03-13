@@ -11,7 +11,7 @@ public:
 
 	[[nodiscard]] float GetElapsedTime() const;
 	[[nodiscard]] float GetTotalTime() const;
-	[[nodiscard]] std::chrono::duration<float> GetTimeToNextFrame();
+	//[[nodiscard]] std::chrono::duration<float> GetTimeToNextFrame();
 	[[nodiscard]] float GetFixedTimeStep() const;
 
 private:

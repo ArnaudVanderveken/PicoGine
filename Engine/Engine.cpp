@@ -61,9 +61,6 @@ void Engine::Run()
 		sceneManager.Render();
 		renderer.EndFrame();
 
-		cout << 1 / time.GetElapsedTime() << endl;
-		const auto ttnf = time.GetTimeToNextFrame();
-		cout << time.GetElapsedTime() << " " << ttnf << endl;
-		std::this_thread::sleep_for(duration_cast<milliseconds>(ttnf));
+		//std::this_thread::sleep_for(duration_cast<milliseconds>(time.GetTimeToNextFrame()));
 	}
 }
