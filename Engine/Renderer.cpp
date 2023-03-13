@@ -110,12 +110,15 @@ Renderer::DirectX11::DirectX11(HWND hwnd)
 
 void Renderer::DirectX11::BeginFrame() const
 {
-	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), Renderer::s_DefaultBackgroundColor);
+	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), m_DefaultBackgroundColor);
 }
 
 void Renderer::DirectX11::EndFrame() const
 {
-	PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));
+	if (m_VSyncEnabled)
+		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
+	else
+		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));
 }
 
 Renderer::~Renderer()

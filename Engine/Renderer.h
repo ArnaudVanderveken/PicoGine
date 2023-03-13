@@ -17,13 +17,14 @@ public:
 	void BeginFrame() const;
 	void EndFrame() const;
 
-	inline static constexpr float s_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
-
 private:
 	class RendererImpl;
 	class DirectX11;
 	/* DATA MEMBERS */
 	const RendererImpl* m_pRendererImpl{};
+
+	inline static float m_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
+	inline static bool m_VSyncEnabled{ true };
 
 	/* PRIVATE METHODS */
 	
