@@ -2,6 +2,8 @@
 #include "WindowHandler.h"
 #include "WindowsException.h"
 
+#include <vld.h>
+
 int main()
 {
 	try
