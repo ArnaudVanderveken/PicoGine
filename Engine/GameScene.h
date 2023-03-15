@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+
+class GameObject;
 
 class GameScene
 {
@@ -18,8 +21,11 @@ public:
 	void LateUpdate();
 	void Render();
 
+	void AddGameObject(GameObject* gameObject);
+
 private:
 	/* DATA MEMBERS */
+	std::vector<GameObject*> m_Objects;
 
 	/* PRIVATE METHODS */
 	

@@ -1,7 +1,9 @@
 add_library(Engine 
-	CleanedWindows.h 
+	BaseComponent.h BaseComponent.cpp
+	CleanedWindows.h
 	EnginePCH.h
 	Engine.h Engine.cpp
+	GameObject.h GameObject.cpp
 	GameScene.h GameScene.cpp
 	InputManager.h InputManager.cpp
 	PicoGineException.h PicoGineException.cpp
