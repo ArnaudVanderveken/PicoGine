@@ -2,11 +2,12 @@
 
 #include <DirectXMath.h>
 
+class GameObject;
 
 class Transform final
 {
 public:
-	Transform() noexcept = default;
+	explicit Transform(const GameObject* owner) noexcept;
 	~Transform() = default;
 
 	Transform(const Transform& other) noexcept = delete;
@@ -34,6 +35,11 @@ public:
 	 * \return Transform matrix
 	 */
 	[[nodiscard]] const DirectX::XMFLOAT4X4& GetTransform();
+	/**
+	 * \brief Get dirty flag
+	 * \return 
+	 */
+	[[nodiscard]] bool IsDirty() const;
 
 	/**
 	 * \brief Set position vector
@@ -96,11 +102,27 @@ public:
 	 */
 	void SetScale(const DirectX::XMFLOAT3& scale);
 
+	/**
+	 * \brief Set transform matrix.
+	 * \param transform New transform as XMFLOAT4X4
+	 */
 	void SetTransform(const DirectX::XMFLOAT4X4& transform);
+	/**
+	 * \brief Set transform matrix.
+	 * \param transform New transform as XMMATRIX
+	 */
+	void SetTransform(const DirectX::XMMATRIX& transform);
+	/**
+	 * \brief Set transform matrix.
+	 * \param position Position vector as XMFLOAT3
+	 * \param rotation Rotation quaternion as XMFLOAT4
+	 * \param scale Scale vector as XMFLOAT3
+	 */
 	void SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale);
 
 private:
 	/* DATA MEMBERS */
+	const GameObject* m_Owner{};
 	DirectX::XMFLOAT3 m_Position{ 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT4 m_Rotation{ 0.f, 0.f, 0.f, 1.f };
 	DirectX::XMFLOAT3 m_Scale{ 1.f, 1.f, 1.f };

@@ -1,6 +1,12 @@
 #include "Transform.h"
+#include "GameObject.h"
 
 using namespace DirectX;
+
+Transform::Transform(const GameObject* owner) noexcept
+	: m_Owner(owner)
+{
+}
 
 const XMFLOAT3& Transform::GetPosition() const
 {
@@ -23,6 +29,11 @@ const XMFLOAT4X4& Transform::GetTransform()
 		RebuildTransform();
 
 	return m_Transform;
+}
+
+bool Transform::IsDirty() const
+{
+	return m_DirtyTransform;
 }
 
 void Transform::SetPosition(float x, float y, float z)
@@ -100,8 +111,13 @@ void Transform::SetTransform(const DirectX::XMFLOAT4X4& transform)
 	UnpackVectors();
 }
 
+void Transform::SetTransform(const DirectX::XMMATRIX& transform)
+{
+	XMStoreFloat4x4(&m_Transform, transform);
+}
+
 void Transform::SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation,
-	const DirectX::XMFLOAT3& scale)
+                             const DirectX::XMFLOAT3& scale)
 {
 	m_Position = position;
 	m_Rotation = rotation;

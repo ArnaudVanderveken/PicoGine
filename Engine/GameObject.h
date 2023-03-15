@@ -2,12 +2,14 @@
 
 #include <vector>
 
+#include "Transform.h"
+
 class BaseComponent;
 
 class GameObject final
 {
 public:
-	GameObject() noexcept = default;
+	GameObject() noexcept;
 	~GameObject();
 
 	GameObject(const GameObject& other) noexcept = delete;
@@ -41,6 +43,10 @@ public:
 		return nullptr;
 	}
 
+	// Transform
+	Transform& GetWorldTransform();
+	Transform& GetLocalTransform();
+
 private:
 	/* DATA MEMBERS */
 	bool m_MarkedForDelete{};
@@ -49,8 +55,14 @@ private:
 	std::vector<GameObject*> m_pChildren{};
 	GameObject* m_pParent{};
 
+	std::unique_ptr<Transform> m_pLocalTransform{}, m_pWorldTransform{};
+	bool m_DirtyWorldTransform{ true };
+	bool m_CheckForDirtyTransform{};
+
 	/* PRIVATE METHODS */
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
+	void UpdateWorldTransform();
+	void PropagateDirtyTransform();
 };
