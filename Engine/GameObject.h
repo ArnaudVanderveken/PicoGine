@@ -21,9 +21,14 @@ public:
 	void LateUpdate();
 	void Render();
 
+	// Destroy objects
 	void MarkForDelete();
 	[[nodiscard]] bool IsMarkedForDelete() const;
 
+	// Parenting
+	void SetParent(GameObject* parent);
+
+	// Components
 	void AddComponent(BaseComponent* component);
 
 	template <typename ComponentType> std::enable_if_t<std::is_base_of_v<GameObject, ComponentType>, ComponentType*>
@@ -45,5 +50,7 @@ private:
 	GameObject* m_pParent{};
 
 	/* PRIVATE METHODS */
-	
+	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
+
 };

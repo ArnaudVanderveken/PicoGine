@@ -48,7 +48,28 @@ bool GameObject::IsMarkedForDelete() const
 	return m_MarkedForDelete;
 }
 
+void GameObject::SetParent(GameObject* parent)
+{
+	if (m_pParent)
+		m_pParent->RemoveChild(this);
+
+	m_pParent = parent;
+
+	if (m_pParent)
+		m_pParent->AddChild(this);
+}
+
 void GameObject::AddComponent(BaseComponent* component)
 {
 	m_pComponents.emplace_back(component);
+}
+
+void GameObject::AddChild(GameObject* child)
+{
+	m_pChildren.emplace_back(child);
+}
+
+void GameObject::RemoveChild(GameObject* child)
+{
+	std::erase(m_pChildren, child);
 }
