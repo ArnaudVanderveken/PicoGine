@@ -8,14 +8,14 @@ class GameScene
 {
 public:
 	GameScene() noexcept = default;
-	virtual ~GameScene() = default;
+	virtual ~GameScene();
 
 	GameScene(const GameScene& other) noexcept = delete;
 	GameScene& operator=(const GameScene& other) noexcept = delete;
 	GameScene(GameScene&& other) noexcept = delete;
 	GameScene& operator=(GameScene&& other) noexcept = delete;
 
-	void Init();
+	virtual void Init() = 0;
 	void FixedUpdate();
 	void Update();
 	void LateUpdate();

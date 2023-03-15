@@ -2,8 +2,10 @@
 
 #include "GameObject.h"
 
-void GameScene::Init()
+GameScene::~GameScene()
 {
+	for (const auto& object : m_Objects)
+		delete object;
 }
 
 void GameScene::FixedUpdate()
