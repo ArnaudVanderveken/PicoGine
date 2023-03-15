@@ -11,6 +11,7 @@ add_library(Engine
 	SceneManager.h SceneManager.cpp
 	Singleton.h
 	TimeManager.h TimeManager.cpp
+	Transform.h Transform.cpp
 	WindowsException.h WindowsException.cpp
 	WindowHandler.h WindowHandler.cpp
 )
