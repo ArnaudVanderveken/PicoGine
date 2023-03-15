@@ -94,6 +94,22 @@ void Transform::SetScale(const XMFLOAT3& scale)
 	m_DirtyTransform = true;
 }
 
+void Transform::SetTransform(const DirectX::XMFLOAT4X4& transform)
+{
+	m_Transform = transform;
+	UnpackVectors();
+}
+
+void Transform::SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation,
+	const DirectX::XMFLOAT3& scale)
+{
+	m_Position = position;
+	m_Rotation = rotation;
+	m_Scale = scale;
+
+	m_DirtyTransform = true;
+}
+
 void Transform::SetScale(float s)
 {
 	SetScale(s, s, s);
@@ -105,4 +121,15 @@ void Transform::RebuildTransform()
 	XMStoreFloat4x4(&m_Transform, world);
 
 	m_DirtyTransform = false;
+}
+
+void Transform::UnpackVectors()
+{
+	XMVECTOR pos, rot, scale;
+	if (XMMatrixDecompose(&scale, &rot, &pos, XMLoadFloat4x4(&m_Transform)))
+	{
+		XMStoreFloat3(&m_Position, pos);
+		XMStoreFloat4(&m_Rotation, rot);
+		XMStoreFloat3(&m_Scale, scale);
+	}
 }
