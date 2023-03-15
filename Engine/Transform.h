@@ -96,16 +96,20 @@ public:
 	 */
 	void SetScale(const DirectX::XMFLOAT3& scale);
 
+	void SetTransform(const DirectX::XMFLOAT4X4& transform);
+	void SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale);
+
 private:
 	/* DATA MEMBERS */
-	DirectX::XMFLOAT3 m_Position{};
-	DirectX::XMFLOAT4 m_Rotation{};
-	DirectX::XMFLOAT3 m_Scale{};
+	DirectX::XMFLOAT3 m_Position{ 0.f, 0.f, 0.f };
+	DirectX::XMFLOAT4 m_Rotation{ 0.f, 0.f, 0.f, 1.f };
+	DirectX::XMFLOAT3 m_Scale{ 1.f, 1.f, 1.f };
 
 	DirectX::XMFLOAT4X4 m_Transform{};
 
-	bool m_DirtyTransform{};
+	bool m_DirtyTransform{ true };
 
 	/* PRIVATE METHODS */
 	void RebuildTransform();
+	void UnpackVectors();
 };
