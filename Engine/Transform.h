@@ -42,6 +42,22 @@ public:
 	[[nodiscard]] bool IsDirty() const;
 
 	/**
+	 * \brief 
+	 * \return Transform's forward unit vector as XMFLOAT3
+	 */
+	[[nodiscard]] const DirectX::XMFLOAT3& GetForward();
+	/**
+	 * \brief 
+	 * \return Transform's right unit vector as XMFLOAT3
+	 */
+	[[nodiscard]] const DirectX::XMFLOAT3& GetRight();
+	/**
+	 * \brief
+	 * \return Transform's up unit vector as XMFLOAT3
+	 */
+	[[nodiscard]] const DirectX::XMFLOAT3& GetUp();
+
+	/**
 	 * \brief Set position vector
 	 * \param x Position.x
 	 * \param y Position.y
@@ -120,22 +136,40 @@ public:
 	 */
 	virtual void SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale);
 
+	// World constants
+
+	inline static constexpr DirectX::XMFLOAT3 WORLD_FORWARD{ 0.f, 0.f, 1.f };
+	inline static constexpr DirectX::XMFLOAT3 WORLD_RIGHT{ 1.f, 0.f, 0.f };
+	inline static constexpr DirectX::XMFLOAT3 WORLD_UP{ 0.f, 1.f, 0.f };
+
 protected:
 	GameObject* m_pOwner{};
 
 private:
 	/* DATA MEMBERS */
+
 	DirectX::XMFLOAT3 m_Position{ 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT4 m_Rotation{ 0.f, 0.f, 0.f, 1.f };
 	DirectX::XMFLOAT3 m_Scale{ 1.f, 1.f, 1.f };
 
-	DirectX::XMFLOAT4X4 m_Transform{};
+	DirectX::XMFLOAT4X4 m_Transform;
+
+	DirectX::XMFLOAT3 m_Forward{};
+	bool m_DirtyForward{};
+	DirectX::XMFLOAT3 m_Right{};
+	bool m_DirtyRight{};
+	DirectX::XMFLOAT3 m_Up{};
+	bool m_DirtyUp{};
 
 	bool m_DirtyTransform{ true };
 
 	/* PRIVATE METHODS */
+
 	void RebuildTransform();
 	void UnpackVectors();
+	void RebuildForward();
+	void RebuildRight();
+	void RebuildUp();
 };
 
 class LocalTransform final : public Transform

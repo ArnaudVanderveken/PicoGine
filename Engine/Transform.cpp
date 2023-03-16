@@ -6,6 +6,7 @@ using namespace DirectX;
 Transform::Transform(GameObject* owner) noexcept
 	: m_pOwner(owner)
 {
+	XMStoreFloat4x4(&m_Transform, XMMatrixIdentity());
 }
 
 const XMFLOAT3& Transform::GetPosition() const
@@ -34,6 +35,30 @@ const XMFLOAT4X4& Transform::GetTransform()
 bool Transform::IsDirty() const
 {
 	return m_DirtyTransform;
+}
+
+const XMFLOAT3& Transform::GetForward()
+{
+	if (m_DirtyForward)
+		RebuildForward();
+
+	return m_Forward;
+}
+
+const XMFLOAT3& Transform::GetRight()
+{
+	if (m_DirtyRight)
+		RebuildRight();
+
+	return m_Right;
+}
+
+const XMFLOAT3& Transform::GetUp()
+{
+	if (m_DirtyUp)
+		RebuildUp();
+
+	return m_Up;
 }
 
 void Transform::SetPosition(float x, float y, float z)
@@ -80,6 +105,9 @@ void Transform::SetRotation(const XMFLOAT4& rotation)
 	m_Rotation = rotation;
 
 	m_DirtyTransform = true;
+	m_DirtyForward = true;
+	m_DirtyRight = true;
+	m_DirtyUp = true;
 }
 
 void Transform::SetRotation(const XMVECTOR& rotation)
@@ -87,6 +115,9 @@ void Transform::SetRotation(const XMVECTOR& rotation)
 	XMStoreFloat4(&m_Rotation, rotation);
 
 	m_DirtyTransform = true;
+	m_DirtyForward = true;
+	m_DirtyRight = true;
+	m_DirtyUp = true;
 }
 
 void Transform::SetScale(float x, float y, float z)
@@ -147,6 +178,27 @@ void Transform::UnpackVectors()
 		XMStoreFloat4(&m_Rotation, rot);
 		XMStoreFloat3(&m_Scale, scale);
 	}
+}
+
+void Transform::RebuildForward()
+{
+	m_DirtyForward = false;
+
+	XMStoreFloat3(&m_Forward, XMVector3Rotate(XMLoadFloat3(&WORLD_FORWARD), XMLoadFloat4(&m_Rotation)));
+}
+
+void Transform::RebuildRight()
+{
+	m_DirtyRight = false;
+
+	XMStoreFloat3(&m_Right, XMVector3Rotate(XMLoadFloat3(&WORLD_RIGHT), XMLoadFloat4(&m_Rotation)));
+}
+
+void Transform::RebuildUp()
+{
+	m_DirtyUp = false;
+
+	XMStoreFloat3(&m_Up, XMVector3Rotate(XMLoadFloat3(&WORLD_UP), XMLoadFloat4(&m_Rotation)));
 }
 
 LocalTransform::LocalTransform(GameObject* owner) noexcept
