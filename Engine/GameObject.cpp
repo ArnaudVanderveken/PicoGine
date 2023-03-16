@@ -60,6 +60,10 @@ bool GameObject::IsMarkedForDelete() const
 
 void GameObject::SetParent(GameObject* parent, bool keepWorldTransform)
 {
+	// Make sure world transform is up to date if kept
+	if (keepWorldTransform && m_DirtyWorldTransform)
+		UpdateWorldTransform();
+
 	if (m_pParent)
 		m_pParent->RemoveChild(this);
 

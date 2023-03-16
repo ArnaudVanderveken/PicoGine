@@ -26,6 +26,7 @@ public:
 private:
 	/* DATA MEMBERS */
 	std::vector<GameObject*> m_Objects;
+	std::vector<GameObject*> m_TrashBin;
 
 	/* PRIVATE METHODS */
 	

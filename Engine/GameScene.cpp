@@ -27,10 +27,15 @@ void GameScene::LateUpdate()
 
 	for (const auto& object : m_Objects)
 		if (object->IsMarkedForDelete())
-		{
-			delete object;
-			std::erase(m_Objects, object);
-		}
+			m_TrashBin.emplace_back(object);
+
+	for (const auto& object : m_TrashBin)
+	{
+		delete object;
+		std::erase(m_Objects, object);
+	}
+	m_TrashBin.clear();
+
 }
 
 void GameScene::Render()
