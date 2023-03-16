@@ -17,11 +17,10 @@ public:
 	GameObject(GameObject&& other) noexcept = delete;
 	GameObject& operator=(GameObject&& other) noexcept = delete;
 
-	void Init();
-	void FixedUpdate();
+	void FixedUpdate() const;
 	void Update();
-	void LateUpdate();
-	void Render();
+	void LateUpdate() const;
+	void Render() const;
 
 	// Destroy objects
 	void MarkForDelete();
@@ -33,7 +32,7 @@ public:
 	// Components
 	void AddComponent(BaseComponent* component);
 
-	template <typename ComponentType> std::enable_if_t<std::is_base_of_v<GameObject, ComponentType>, ComponentType*>
+	template <typename ComponentType> std::enable_if_t<std::is_base_of_v<BaseComponent, ComponentType>, ComponentType*>
 	GetComponent()
 	{
 		for (auto baseComp : m_pComponents)

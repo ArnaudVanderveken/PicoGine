@@ -16,11 +16,7 @@ GameObject::~GameObject()
 		delete component;
 }
 
-void GameObject::Init()
-{
-}
-
-void GameObject::FixedUpdate()
+void GameObject::FixedUpdate() const
 {
 	for (const auto& component : m_pComponents)
 		component->FixedUpdate();
@@ -38,13 +34,13 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::LateUpdate()
+void GameObject::LateUpdate() const
 {
 	for (const auto& component : m_pComponents)
 		component->LateUpdate();
 }
 
-void GameObject::Render()
+void GameObject::Render() const
 {
 	for (const auto& component : m_pComponents)
 		component->Render();
