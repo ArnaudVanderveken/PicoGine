@@ -58,7 +58,7 @@ bool GameObject::IsMarkedForDelete() const
 	return m_MarkedForDelete;
 }
 
-void GameObject::SetParent(GameObject* parent)
+void GameObject::SetParent(GameObject* parent, bool keepWorldTransform)
 {
 	if (m_pParent)
 		m_pParent->RemoveChild(this);
@@ -67,6 +67,13 @@ void GameObject::SetParent(GameObject* parent)
 
 	if (m_pParent)
 		m_pParent->AddChild(this);
+
+	if (keepWorldTransform)
+		// Call to base Transform::SetTransform to avoid a useless dirty flag propagation
+		m_pLocalTransform->Transform::SetTransform(XMMatrixMultiply(XMMatrixInverse(nullptr, XMLoadFloat4x4(&m_pWorldTransform->GetTransform())), XMLoadFloat4x4(&m_pParent->GetWorldTransform().GetTransform())));
+	
+	else
+		m_DirtyWorldTransform = true; // Will be rebuilt on next getter call.
 }
 
 void GameObject::AddComponent(BaseComponent* component)

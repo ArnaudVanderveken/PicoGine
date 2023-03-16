@@ -3,7 +3,7 @@
 
 using namespace DirectX;
 
-Transform::Transform(const GameObject* owner) noexcept
+Transform::Transform(GameObject* owner) noexcept
 	: m_pOwner(owner)
 {
 }
@@ -149,7 +149,7 @@ void Transform::UnpackVectors()
 	}
 }
 
-LocalTransform::LocalTransform(const GameObject* owner) noexcept
+LocalTransform::LocalTransform(GameObject* owner) noexcept
 	: Transform(owner)
 {
 }

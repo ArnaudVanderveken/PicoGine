@@ -7,7 +7,7 @@ class GameObject;
 class Transform
 {
 public:
-	explicit Transform(const GameObject* owner) noexcept;
+	explicit Transform(GameObject* owner) noexcept;
 	virtual ~Transform() = default;
 
 	Transform(const Transform& other) noexcept = delete;
@@ -140,8 +140,10 @@ private:
 
 class LocalTransform final : public Transform
 {
+	friend class GameObject;
+
 public:
-	explicit LocalTransform(const GameObject* owner) noexcept;
+	explicit LocalTransform(GameObject* owner) noexcept;
 	~LocalTransform() override = default;
 
 	LocalTransform(const LocalTransform& other) = delete;

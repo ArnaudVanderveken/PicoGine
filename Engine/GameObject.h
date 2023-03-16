@@ -29,7 +29,7 @@ public:
 	[[nodiscard]] bool IsMarkedForDelete() const;
 
 	// Parenting
-	void SetParent(GameObject* parent);
+	void SetParent(GameObject* parent, bool keepWorldTransform = false);
 
 	// Components
 	void AddComponent(BaseComponent* component);
