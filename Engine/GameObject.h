@@ -33,7 +33,6 @@ public:
 
 	// Components
 	void AddComponent(BaseComponent* component);
-
 	template <typename ComponentType> std::enable_if_t<std::is_base_of_v<BaseComponent, ComponentType>, ComponentType*>
 	GetComponent()
 	{
@@ -48,8 +47,12 @@ public:
 	Transform& GetWorldTransform();
 	Transform& GetLocalTransform();
 
+	[[nodiscard]] bool IsActive() const;
+	void SetActive(bool active, bool propagate);
+
 private:
 	/* DATA MEMBERS */
+
 	bool m_MarkedForDelete{};
 	std::vector<BaseComponent*> m_pComponents{};
 
@@ -61,7 +64,10 @@ private:
 	bool m_DirtyWorldTransform{ true };
 	bool m_CheckForDirtyTransform{};
 
+	bool m_IsActive{ true };
+
 	/* PRIVATE METHODS */
+
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 

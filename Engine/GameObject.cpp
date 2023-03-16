@@ -19,13 +19,15 @@ GameObject::~GameObject()
 void GameObject::FixedUpdate() const
 {
 	for (const auto& component : m_pComponents)
-		component->FixedUpdate();
+		if (component->IsActive())
+			component->FixedUpdate();
 }
 
 void GameObject::Update()
 {
 	for (const auto& component : m_pComponents)
-		component->Update();
+		if (component->IsActive())
+			component->Update();
 
 	if (m_CheckForDirtyTransform && m_pLocalTransform->IsDirty())
 	{
@@ -37,13 +39,15 @@ void GameObject::Update()
 void GameObject::LateUpdate() const
 {
 	for (const auto& component : m_pComponents)
-		component->LateUpdate();
+		if (component->IsActive())
+			component->LateUpdate();
 }
 
 void GameObject::Render() const
 {
 	for (const auto& component : m_pComponents)
-		component->Render();
+		if (component->IsActive())
+			component->Render();
 }
 
 void GameObject::MarkForDelete()
@@ -82,6 +86,7 @@ void GameObject::SetParent(GameObject* parent, bool keepWorldTransform)
 
 void GameObject::AddComponent(BaseComponent* component)
 {
+	component->SetOwner(this);
 	m_pComponents.emplace_back(component);
 }
 
@@ -97,6 +102,20 @@ Transform& GameObject::GetLocalTransform()
 {
 	m_CheckForDirtyTransform = true;
 	return *m_pLocalTransform;
+}
+
+bool GameObject::IsActive() const
+{
+	return m_IsActive;
+}
+
+void GameObject::SetActive(bool active, bool propagate)
+{
+	m_IsActive = active;
+
+	if (propagate)
+		for (const auto& child : m_pChildren)
+			child->SetActive(active, true);
 }
 
 void GameObject::AddChild(GameObject* child)

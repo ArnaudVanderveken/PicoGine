@@ -11,19 +11,22 @@ GameScene::~GameScene()
 void GameScene::FixedUpdate()
 {
 	for (const auto& object : m_Objects)
-		object->FixedUpdate();
+		if (object->IsActive())
+			object->FixedUpdate();
 }
 
 void GameScene::Update()
 {
 	for (const auto& object : m_Objects)
-		object->Update();
+		if (object->IsActive())
+			object->Update();
 }
 
 void GameScene::LateUpdate()
 {
 	for (const auto& object : m_Objects)
-		object->LateUpdate();
+		if (object->IsActive())
+			object->LateUpdate();
 
 	for (const auto& object : m_Objects)
 		if (object->IsMarkedForDelete())
@@ -38,10 +41,11 @@ void GameScene::LateUpdate()
 
 }
 
-void GameScene::Render()
+void GameScene::Render() const
 {
 	for (const auto& object : m_Objects)
-		object->Render();
+		if (object->IsActive())
+			object->Render();
 }
 
 void GameScene::AddGameObject(GameObject* gameObject)

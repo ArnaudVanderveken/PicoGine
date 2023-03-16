@@ -19,12 +19,13 @@ public:
 	void FixedUpdate();
 	void Update();
 	void LateUpdate();
-	void Render();
+	void Render() const;
 
 	void AddGameObject(GameObject* gameObject);
 
 private:
 	/* DATA MEMBERS */
+
 	std::vector<GameObject*> m_Objects;
 	std::vector<GameObject*> m_TrashBin;
 
