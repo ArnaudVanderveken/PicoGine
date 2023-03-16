@@ -6,7 +6,7 @@ using namespace DirectX;
 
 GameObject::GameObject() noexcept
 {
-	m_pLocalTransform = std::make_unique<Transform>(this);
+	m_pLocalTransform = std::make_unique<LocalTransform>(this);
 	m_pWorldTransform = std::make_unique<Transform>(this);
 }
 

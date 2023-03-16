@@ -8,6 +8,8 @@ class BaseComponent;
 
 class GameObject final
 {
+	friend void LocalTransform::SetWorldTransformDirty() const;
+
 public:
 	GameObject() noexcept;
 	~GameObject();
@@ -54,7 +56,8 @@ private:
 	std::vector<GameObject*> m_pChildren{};
 	GameObject* m_pParent{};
 
-	std::unique_ptr<Transform> m_pLocalTransform{}, m_pWorldTransform{};
+	std::unique_ptr<LocalTransform> m_pLocalTransform{};
+	std::unique_ptr<Transform> m_pWorldTransform{};
 	bool m_DirtyWorldTransform{ true };
 	bool m_CheckForDirtyTransform{};
 
