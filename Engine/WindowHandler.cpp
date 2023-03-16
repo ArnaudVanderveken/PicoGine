@@ -1,12 +1,17 @@
 #include "WindowHandler.h"
 
 #include "InputManager.h"
+#include "GameSettings.h"
 #include "WindowsException.h"
 
 
 WindowHandler::WindowHandler()
 	: m_HInstance{ GetModuleHandle(nullptr) }
 	, m_HWnd{}
+	, m_WindowTop{ GameSettings::windowTop }
+	, m_WindowLeft{ GameSettings::windowLeft }
+	, m_WindowWidth{ GameSettings::windowWidth }
+	, m_WindowHeight{ GameSettings::windowHeight }
 {
 	//Register window class
 	WNDCLASSEX wndClass{};

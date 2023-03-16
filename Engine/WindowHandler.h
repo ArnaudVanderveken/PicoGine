@@ -27,10 +27,10 @@ private:
 	int m_ExitCode{};
 
 	const wchar_t* m_ClassName{ L"PicoGineClass" };
-	const unsigned short m_WindowTop{ 100 };
-	const unsigned short m_WindowLeft{ 100 };
-	const unsigned short m_WindowWidth{ 1280 };
-	const unsigned short m_WindowHeight{ 720 };
+	const unsigned short m_WindowTop;
+	const unsigned short m_WindowLeft;
+	const unsigned short m_WindowWidth;
+	const unsigned short m_WindowHeight;
 
 	/* PRIVATE METHODS */
 	static LRESULT CALLBACK MsgHandlerSetup(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept;

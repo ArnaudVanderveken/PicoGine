@@ -1,4 +1,5 @@
 add_executable(Game 
+	GamePCH.h
 	main.cpp
 )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest /W4 /WX")

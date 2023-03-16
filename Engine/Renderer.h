@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameSettings.h"
 #include "Singleton.h"
 
 class Renderer final : public Singleton<Renderer>
@@ -24,7 +25,7 @@ private:
 	const RendererImpl* m_pRendererImpl{};
 
 	inline static float m_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
-	inline static bool m_VSyncEnabled{ true };
+	inline static bool m_VSyncEnabled{ GameSettings::useVSync };
 
 	/* PRIVATE METHODS */
 	

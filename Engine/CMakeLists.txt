@@ -1,9 +1,11 @@
 add_library(Engine 
 	BaseComponent.h BaseComponent.cpp
+	CameraComponent.h CameraComponent.cpp
 	CleanedWindows.h
 	EnginePCH.h
 	Engine.h Engine.cpp
 	GameObject.h GameObject.cpp
+	GameSettings.h
 	GameScene.h GameScene.cpp
 	InputManager.h InputManager.cpp
 	PicoGineException.h PicoGineException.cpp
