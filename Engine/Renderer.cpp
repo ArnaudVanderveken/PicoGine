@@ -22,6 +22,8 @@ public:
 	virtual void BeginFrame() const = 0;
 	virtual void EndFrame() const = 0;
 
+	virtual void RenderTestTriangle() = 0;
+
 protected:
 	/* DATA MEMBERS */
 
@@ -50,6 +52,8 @@ public:
 
 	void BeginFrame() const override;
 	void EndFrame() const override;
+
+	void RenderTestTriangle() override;
 
 private:
 	/* DATA MEMBERS */
@@ -125,6 +129,10 @@ void DirectX11::EndFrame() const
 		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));
 }
 
+void DirectX11::RenderTestTriangle()
+{
+}
+
 Renderer::~Renderer()
 {
 	delete m_pRendererImpl;
@@ -147,4 +155,5 @@ void Renderer::EndFrame() const
 
 void Renderer::RenderTestTriangle()
 {
+	m_pRendererImpl->RenderTestTriangle();
 }

@@ -25,7 +25,7 @@ public:
 private:
 	/* DATA MEMBERS */
 
-	const RendererImpl* m_pRendererImpl{};
+	RendererImpl* m_pRendererImpl{};
 
 	/* PRIVATE METHODS */
 	
