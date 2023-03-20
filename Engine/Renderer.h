@@ -6,6 +6,8 @@
 class Renderer final : public Singleton<Renderer>
 {
 public:
+	class RendererImpl;
+
 	Renderer() noexcept = default;
 	~Renderer() override;
 
@@ -21,13 +23,9 @@ public:
 	void RenderTestTriangle();
 
 private:
-	class RendererImpl;
-	class DirectX11;
 	/* DATA MEMBERS */
-	const RendererImpl* m_pRendererImpl{};
 
-	inline static float m_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
-	inline static bool m_VSyncEnabled{ GameSettings::useVSync };
+	const RendererImpl* m_pRendererImpl{};
 
 	/* PRIVATE METHODS */
 	

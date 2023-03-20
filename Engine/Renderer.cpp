@@ -24,7 +24,11 @@ public:
 
 protected:
 	/* DATA MEMBERS */
+
 	HWND m_HWnd;
+
+	inline static float m_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
+	inline static bool m_VSyncEnabled{ GameSettings::useVSync };
 
 private:
 	/* DATA MEMBERS */
@@ -33,7 +37,7 @@ private:
 	
 };
 
-class Renderer::DirectX11 final : public RendererImpl
+class DirectX11 final : public Renderer::RendererImpl
 {
 public:
 	explicit DirectX11(HWND hwnd);
@@ -63,8 +67,8 @@ Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
 {
 }
 
-Renderer::DirectX11::DirectX11(HWND hwnd)
-	: RendererImpl{ hwnd }
+DirectX11::DirectX11(HWND hwnd)
+	: Renderer::RendererImpl{ hwnd }
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
 	swapChainDesc.BufferDesc.Width = 0;
@@ -108,12 +112,12 @@ Renderer::DirectX11::DirectX11(HWND hwnd)
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
 }
 
-void Renderer::DirectX11::BeginFrame() const
+void DirectX11::BeginFrame() const
 {
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), m_DefaultBackgroundColor);
 }
 
-void Renderer::DirectX11::EndFrame() const
+void DirectX11::EndFrame() const
 {
 	if (m_VSyncEnabled)
 		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
