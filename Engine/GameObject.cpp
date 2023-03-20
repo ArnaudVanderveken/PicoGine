@@ -149,7 +149,7 @@ void GameObject::PropagateDirtyTransform()
 	m_DirtyWorldTransform = true;
 
 	for (const auto& component : m_pNotifyDirtyTransform)
-		component->
+		component->TransformHasChanged();
 
 	for (const auto& child : m_pChildren)
 		child->PropagateDirtyTransform();
