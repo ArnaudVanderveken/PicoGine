@@ -140,3 +140,7 @@ void Renderer::EndFrame() const
 {
 	m_pRendererImpl->EndFrame();
 }
+
+void Renderer::RenderTestTriangle()
+{
+}

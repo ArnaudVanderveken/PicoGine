@@ -59,6 +59,7 @@ void Engine::Run()
 		/* --- RENDER --- */
 		renderer.BeginFrame();
 		sceneManager.Render();
+		renderer.RenderTestTriangle();
 		renderer.EndFrame();
 
 		//std::this_thread::sleep_for(duration_cast<milliseconds>(time.GetTimeToNextFrame()));

@@ -18,6 +18,8 @@ public:
 	void BeginFrame() const;
 	void EndFrame() const;
 
+	void RenderTestTriangle();
+
 private:
 	class RendererImpl;
 	class DirectX11;
