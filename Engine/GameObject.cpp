@@ -118,6 +118,11 @@ void GameObject::SetActive(bool active, bool propagate)
 			child->SetActive(active, true);
 }
 
+void GameObject::RegisterNotifyDirtyTransform(BaseComponent* component)
+{
+	m_pNotifyDirtyTransform.emplace_back(component);
+}
+
 void GameObject::AddChild(GameObject* child)
 {
 	m_pChildren.emplace_back(child);
@@ -142,6 +147,9 @@ void GameObject::UpdateWorldTransform()
 void GameObject::PropagateDirtyTransform()
 {
 	m_DirtyWorldTransform = true;
+
+	for (const auto& component : m_pNotifyDirtyTransform)
+		component->
 
 	for (const auto& child : m_pChildren)
 		child->PropagateDirtyTransform();

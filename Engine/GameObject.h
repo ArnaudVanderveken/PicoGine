@@ -50,11 +50,14 @@ public:
 	[[nodiscard]] bool IsActive() const;
 	void SetActive(bool active, bool propagate);
 
+	void RegisterNotifyDirtyTransform(BaseComponent* component);
+
 private:
 	/* DATA MEMBERS */
 
 	bool m_MarkedForDelete{};
 	std::vector<BaseComponent*> m_pComponents{};
+	std::vector<BaseComponent*> m_pNotifyDirtyTransform{};
 
 	std::vector<GameObject*> m_pChildren{};
 	GameObject* m_pParent{};
