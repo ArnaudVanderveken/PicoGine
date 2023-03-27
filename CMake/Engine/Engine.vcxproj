@@ -354,6 +354,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Singleton.h" />
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Structs.h" />
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\TimeManager.h" />
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TimeManager.cpp">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>

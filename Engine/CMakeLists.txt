@@ -12,6 +12,7 @@ add_library(Engine
 	Renderer.h Renderer.cpp
 	SceneManager.h SceneManager.cpp
 	Singleton.h
+	Structs.h
 	TimeManager.h TimeManager.cpp
 	TestPixelShader.hlsl
 	TestVertexShader.hlsl

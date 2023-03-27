@@ -133,12 +133,12 @@ void DirectX11::EndFrame() const
 
 void DirectX11::RenderTestTriangle()
 {
-	struct Vertex
+	struct TestVertex
 	{
 		float x{}, y{};
 	};
 
-	constexpr Vertex vertices[] =
+	constexpr TestVertex vertices[] =
 	{
 		{.0f, .5f},
 		{.5f, -.5f},
@@ -153,14 +153,14 @@ void DirectX11::RenderTestTriangle()
 	bDesc.CPUAccessFlags = 0u;
 	bDesc.MiscFlags = 0u;
 	bDesc.ByteWidth = sizeof(vertices);
-	bDesc.StructureByteStride = sizeof(Vertex);
+	bDesc.StructureByteStride = sizeof(TestVertex);
 
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = vertices;
 
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateBuffer(&bDesc, &sd, &pVertexBuffer));
 
-	constexpr UINT stride = sizeof(Vertex);
+	constexpr UINT stride = sizeof(TestVertex);
 	constexpr UINT offset = 0u;
 	m_pDeviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 
