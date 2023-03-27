@@ -113,6 +113,9 @@
     <CustomBuild Include="C:\Users\vande\Desktop\PicoGine\Engine\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPixelShader.hlsl">
+      <Filter>Shaders\Pixel Shaders</Filter>
+    </FXCompile>
     <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVertexShader.hlsl">
       <Filter>Shaders\Vertex Shaders</Filter>
     </FXCompile>
@@ -126,6 +129,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{F03BEEE7-06BE-3C4D-9921-B7B3B69CB8E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Pixel Shaders">
+      <UniqueIdentifier>{093137D0-9417-3672-8B2C-BA3C286F7400}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\Vertex Shaders">
       <UniqueIdentifier>{44FB9A6E-1736-3EA6-906F-FCB0A02DB2C3}</UniqueIdentifier>

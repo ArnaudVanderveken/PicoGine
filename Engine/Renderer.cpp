@@ -2,7 +2,9 @@
 
 #include "CleanedWindows.h"
 #include <d3d11.h>
-#pragma comment (lib, "d3d11.lib")
+#include <d3dcompiler.h>
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
 #include "WindowsException.h"
 #include "WindowHandler.h"
 
@@ -131,6 +133,78 @@ void DirectX11::EndFrame() const
 
 void DirectX11::RenderTestTriangle()
 {
+	struct Vertex
+	{
+		float x{}, y{};
+	};
+
+	constexpr Vertex vertices[] =
+	{
+		{.0f, .5f},
+		{.5f, -.5f},
+		{-.5f, -.5f}
+	};
+
+	ComPtr<ID3D11Buffer> pVertexBuffer;
+
+	D3D11_BUFFER_DESC bDesc{};
+	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bDesc.Usage = D3D11_USAGE_DEFAULT;
+	bDesc.CPUAccessFlags = 0u;
+	bDesc.MiscFlags = 0u;
+	bDesc.ByteWidth = sizeof(vertices);
+	bDesc.StructureByteStride = sizeof(Vertex);
+
+	D3D11_SUBRESOURCE_DATA sd{};
+	sd.pSysMem = vertices;
+
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateBuffer(&bDesc, &sd, &pVertexBuffer));
+
+	constexpr UINT stride = sizeof(Vertex);
+	constexpr UINT offset = 0u;
+	m_pDeviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	// PS
+	ComPtr<ID3D11PixelShader> pPixelShader;
+	ComPtr<ID3DBlob> pBlob;
+	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestPixelShader.cso", &pBlob));
+	PGWND_THROW_IF_FAILED(m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
+
+	m_pDeviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+
+	// VS
+	ComPtr<ID3D11VertexShader> pVertexShader;
+	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestVertexShader.cso", &pBlob));
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
+
+	m_pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+	// OM
+	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
+
+	// IA
+	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	ComPtr<ID3D11InputLayout> pInputLayout;
+	const D3D11_INPUT_ELEMENT_DESC ied[] =
+	{
+		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateInputLayout(ied, UINT(std::size(ied)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
+
+	m_pDeviceContext->IASetInputLayout(pInputLayout.Get());
+
+	// RS
+	D3D11_VIEWPORT vp{};
+	vp.Width = GameSettings::windowWidth;
+	vp.Height = GameSettings::windowHeight;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	m_pDeviceContext->RSSetViewports(1u, &vp);
+
+	m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
 }
 
 Renderer::~Renderer()
@@ -153,7 +227,7 @@ void Renderer::EndFrame() const
 	m_pRendererImpl->EndFrame();
 }
 
-void Renderer::RenderTestTriangle()
+void Renderer::RenderTestTriangle() const
 {
 	m_pRendererImpl->RenderTestTriangle();
 }

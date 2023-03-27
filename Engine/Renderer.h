@@ -20,7 +20,7 @@ public:
 	void BeginFrame() const;
 	void EndFrame() const;
 
-	void RenderTestTriangle();
+	void RenderTestTriangle() const;
 
 private:
 	/* DATA MEMBERS */

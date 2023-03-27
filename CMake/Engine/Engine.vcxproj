@@ -361,10 +361,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPixelShader.hlsl">
+      <ShaderType>Pixel</ShaderType>
+      <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
+    </FXCompile>
     <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVertexShader.hlsl">
       <ShaderType>Vertex</ShaderType>
-      <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>C:/Users/vande/Desktop/PicoGine/Engine/%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
     </FXCompile>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Transform.h" />
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Transform.cpp">
