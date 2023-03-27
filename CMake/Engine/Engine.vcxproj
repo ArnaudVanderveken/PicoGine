@@ -363,10 +363,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </ClCompile>
     <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPixelShader.hlsl">
       <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
     </FXCompile>
     <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVertexShader.hlsl">
       <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
     </FXCompile>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Transform.h" />
