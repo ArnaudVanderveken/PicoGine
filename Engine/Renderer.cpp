@@ -116,6 +116,19 @@ DirectX11::DirectX11(HWND hwnd)
 	ComPtr<ID3D11Resource> pBackBuffer{};
 	PGWND_THROW_IF_FAILED(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_pRenderTargetView));
+
+	// Setup Output Merger
+	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
+
+	// Setup Viewport
+	D3D11_VIEWPORT vp{};
+	vp.Width = GameSettings::windowWidth;
+	vp.Height = GameSettings::windowHeight;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	m_pDeviceContext->RSSetViewports(1u, &vp);
 }
 
 void DirectX11::BeginFrame() const
@@ -179,9 +192,6 @@ void DirectX11::RenderTestTriangle()
 
 	m_pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 
-	// OM
-	m_pDeviceContext->OMSetRenderTargets(1u, m_pRenderTargetView.GetAddressOf(), nullptr);
-
 	// IA
 	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -193,16 +203,6 @@ void DirectX11::RenderTestTriangle()
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateInputLayout(ied, UINT(std::size(ied)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
 
 	m_pDeviceContext->IASetInputLayout(pInputLayout.Get());
-
-	// RS
-	D3D11_VIEWPORT vp{};
-	vp.Width = GameSettings::windowWidth;
-	vp.Height = GameSettings::windowHeight;
-	vp.MinDepth = 0;
-	vp.MaxDepth = 1;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	m_pDeviceContext->RSSetViewports(1u, &vp);
 
 	m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
 }
