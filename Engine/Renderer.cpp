@@ -151,6 +151,9 @@ void DirectX11::RenderTestTriangle()
 		unsigned char r{}, g{}, b{}, a{};
 	};
 
+	// Vertex Buffer
+	ComPtr<ID3D11Buffer> pVertexBuffer;
+
 	constexpr TestVertex vertices[] =
 	{
 		{ .0f, .5f, 255, 0, 0, 255 },
@@ -158,24 +161,45 @@ void DirectX11::RenderTestTriangle()
 		{ -.5f, -.5f, 0, 0, 255, 255 }
 	};
 
-	ComPtr<ID3D11Buffer> pVertexBuffer;
+	D3D11_BUFFER_DESC vbDesc{};
+	vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vbDesc.Usage = D3D11_USAGE_DEFAULT;
+	vbDesc.CPUAccessFlags = 0u;
+	vbDesc.MiscFlags = 0u;
+	vbDesc.ByteWidth = sizeof(vertices);
+	vbDesc.StructureByteStride = sizeof(TestVertex);
 
-	D3D11_BUFFER_DESC bDesc{};
-	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bDesc.Usage = D3D11_USAGE_DEFAULT;
-	bDesc.CPUAccessFlags = 0u;
-	bDesc.MiscFlags = 0u;
-	bDesc.ByteWidth = sizeof(vertices);
-	bDesc.StructureByteStride = sizeof(TestVertex);
+	D3D11_SUBRESOURCE_DATA vsd{};
+	vsd.pSysMem = vertices;
 
-	D3D11_SUBRESOURCE_DATA sd{};
-	sd.pSysMem = vertices;
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateBuffer(&vbDesc, &vsd, &pVertexBuffer));
 
-	PGWND_THROW_IF_FAILED(m_pDevice->CreateBuffer(&bDesc, &sd, &pVertexBuffer));
+	constexpr UINT vbStride = sizeof(TestVertex);
+	constexpr UINT vbOffset = 0u;
+	m_pDeviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &vbStride, &vbOffset);
 
-	constexpr UINT stride = sizeof(TestVertex);
-	constexpr UINT offset = 0u;
-	m_pDeviceContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+	// Index Buffer
+	ComPtr<ID3D11Buffer> pIndexBuffer;
+
+	constexpr uint16_t indices[] =
+	{
+		0, 1, 2
+	};
+
+	D3D11_BUFFER_DESC ibDesc{};
+	ibDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	ibDesc.Usage = D3D11_USAGE_DEFAULT;
+	ibDesc.CPUAccessFlags = 0u;
+	ibDesc.MiscFlags = 0u;
+	ibDesc.ByteWidth = sizeof(indices);
+	ibDesc.StructureByteStride = sizeof(uint16_t);
+
+	D3D11_SUBRESOURCE_DATA isd{};
+	isd.pSysMem = indices;
+
+	PGWND_THROW_IF_FAILED(m_pDevice->CreateBuffer(&ibDesc, &isd, &pIndexBuffer));
+
+	m_pDeviceContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
 	// PS
 	ComPtr<ID3D11PixelShader> pPixelShader;
@@ -205,7 +229,8 @@ void DirectX11::RenderTestTriangle()
 
 	m_pDeviceContext->IASetInputLayout(pInputLayout.Get());
 
-	m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
+	//m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
+	m_pDeviceContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
 }
 
 Renderer::~Renderer()
