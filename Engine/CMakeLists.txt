@@ -31,9 +31,11 @@ file(GLOB_RECURSE PIXEL_SHADERS
 
 file(GLOB_RECURSE GEOMETRY_SHADERS
 )
+
 source_group("Shaders/Vertex Shaders" FILES ${VERTEX_SHADERS})
 source_group("Shaders/Pixel Shaders" FILES ${PIXEL_SHADERS})
 source_group("Shaders/Geometry Shaders" FILES ${GEOMETRY_SHADERS})
+source_group("Shaders/Shaders Headers" FILES ${SHADER_HEADERS})
 set_source_files_properties(${VERTEX_SHADERS} PROPERTIES VS_SHADER_OBJECT_FILE_NAME "$(ProjectDir)/Shaders/%(Filename).cso" VS_SHADER_TYPE Vertex VS_SHADER_MODEL 5.0)
 set_source_files_properties(${PIXEL_SHADERS} PROPERTIES VS_SHADER_OBJECT_FILE_NAME "$(ProjectDir)/Shaders/%(Filename).cso" VS_SHADER_TYPE Pixel VS_SHADER_MODEL 5.0)
 set_source_files_properties(${GEOMETRY_SHADERS} PROPERTIES VS_SHADER_OBJECT_FILE_NAME "$(ProjectDir)/Shaders/%(Filename).cso" VS_SHADER_TYPE Geometry VS_SHADER_MODEL 5.0)

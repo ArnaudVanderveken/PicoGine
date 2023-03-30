@@ -73,8 +73,7 @@ Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
 {
 }
 
-DirectX11::DirectX11(HWND hwnd)
-	: Renderer::RendererImpl{ hwnd }
+DirectX11::DirectX11(HWND hwnd) : Renderer::RendererImpl{ hwnd }
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
 	swapChainDesc.BufferDesc.Width = 0;
@@ -149,13 +148,14 @@ void DirectX11::RenderTestTriangle()
 	struct TestVertex
 	{
 		float x{}, y{};
+		unsigned char r{}, g{}, b{}, a{};
 	};
 
 	constexpr TestVertex vertices[] =
 	{
-		{.0f, .5f},
-		{.5f, -.5f},
-		{-.5f, -.5f}
+		{ .0f, .5f, 255, 0, 0, 255 },
+		{ .5f, -.5f, 0, 255, 0, 255 },
+		{ -.5f, -.5f, 0, 0, 255, 255 }
 	};
 
 	ComPtr<ID3D11Buffer> pVertexBuffer;
@@ -198,7 +198,8 @@ void DirectX11::RenderTestTriangle()
 	ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC ied[] =
 	{
-		{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8u, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateInputLayout(ied, UINT(std::size(ied)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
 
