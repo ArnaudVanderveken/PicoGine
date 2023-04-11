@@ -7,6 +7,9 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\CameraComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseMaterial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CameraComponent.h">
