@@ -309,6 +309,23 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CleanedWindows.h" />
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorMaterial.h" />
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorMaterial.cpp">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/Debug/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/Release/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+    </ClCompile>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorVS.hlsl">
+      <ShaderType>Vertex</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
+    </FXCompile>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorPS.hlsl">
+      <ShaderType>Pixel</ShaderType>
+      <ShaderModel>5.0</ShaderModel>
+      <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
+    </FXCompile>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\EnginePCH.h" />
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.h" />
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
@@ -369,13 +386,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/MinSizeRel/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/vande/Desktop/PicoGine/CMake/Engine/CMakeFiles/Engine.dir/RelWithDebInfo/cmake_pch.hxx;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
-    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPixelShader.hlsl">
-      <ShaderType>Pixel</ShaderType>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVS.hlsl">
+      <ShaderType>Vertex</ShaderType>
       <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
     </FXCompile>
-    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVertexShader.hlsl">
-      <ShaderType>Vertex</ShaderType>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPS.hlsl">
+      <ShaderType>Pixel</ShaderType>
       <ShaderModel>5.0</ShaderModel>
       <ObjectFileOutput>$(ProjectDir)/Shaders/%(Filename).cso</ObjectFileOutput>
     </FXCompile>

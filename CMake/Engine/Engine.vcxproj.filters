@@ -8,10 +8,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseMaterial.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\CameraComponent.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorMaterial.cpp">
+      <Filter>Materials</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Engine.cpp">
       <Filter>Source Files</Filter>
@@ -52,13 +55,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseMaterial.h">
-      <Filter>Header Files</Filter>
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CameraComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\CleanedWindows.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorMaterial.h">
+      <Filter>Materials</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\EnginePCH.h">
       <Filter>Header Files</Filter>
@@ -122,16 +128,25 @@
     <CustomBuild Include="C:\Users\vande\Desktop\PicoGine\Engine\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPixelShader.hlsl">
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorVS.hlsl">
+      <Filter>Shaders\Vertex Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\ColorPS.hlsl">
       <Filter>Shaders\Pixel Shaders</Filter>
     </FXCompile>
-    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVertexShader.hlsl">
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestVS.hlsl">
       <Filter>Shaders\Vertex Shaders</Filter>
+    </FXCompile>
+    <FXCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TestPS.hlsl">
+      <Filter>Shaders\Pixel Shaders</Filter>
     </FXCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{EFBC0A36-FA32-33DB-A660-3E8257D0F954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{D2936652-FF94-346B-AA43-4D2E6D22BA65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Precompile Header File">
       <UniqueIdentifier>{7175D615-218B-36C0-A562-A381AD149A97}</UniqueIdentifier>

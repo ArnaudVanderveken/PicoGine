@@ -2,15 +2,15 @@
 
 #include "CleanedWindows.h"
 #include <d3d11.h>
-#include <d3dcompiler.h>
 #pragma comment(lib, "d3d11.lib")
+#include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
 #include "WindowsException.h"
 #include "WindowHandler.h"
 
 using Microsoft::WRL::ComPtr;
 
-class Renderer::RendererImpl abstract
+class Renderer::RendererImpl
 {
 public:
 	explicit RendererImpl(HWND hwnd) noexcept;
@@ -20,6 +20,9 @@ public:
 	RendererImpl& operator=(const RendererImpl& other) noexcept = delete;
 	RendererImpl(RendererImpl&& other) noexcept = delete;
 	RendererImpl& operator=(RendererImpl&& other) noexcept = delete;
+
+	virtual void* GetDevice() const = 0;
+	virtual void* GetDeviceContext() const = 0;
 
 	virtual void BeginFrame() const = 0;
 	virtual void EndFrame() const = 0;
@@ -33,11 +36,6 @@ protected:
 
 	inline static float m_DefaultBackgroundColor[4] = { .5f, .5f, .5f, 1.0f };
 	inline static bool m_VSyncEnabled{ GameSettings::useVSync };
-
-private:
-	/* DATA MEMBERS */
-
-	/* PRIVATE METHODS */
 	
 };
 
@@ -52,6 +50,9 @@ public:
 	DirectX11(DirectX11&& other) noexcept = delete;
 	DirectX11& operator=(DirectX11&& other) noexcept = delete;
 
+	void* GetDevice() const override;
+	void* GetDeviceContext() const override;
+
 	void BeginFrame() const override;
 	void EndFrame() const override;
 
@@ -59,6 +60,7 @@ public:
 
 private:
 	/* DATA MEMBERS */
+
 	ComPtr<ID3D11Device> m_pDevice{};
 	ComPtr<IDXGISwapChain> m_pSwapChain{};
 	ComPtr<ID3D11DeviceContext> m_pDeviceContext{};
@@ -67,6 +69,16 @@ private:
 	/* PRIVATE METHODS */
 	
 };
+
+void* DirectX11::GetDevice() const
+{
+	return m_pDevice.Get();
+}
+
+void* DirectX11::GetDeviceContext() const
+{
+	return m_pDeviceContext.Get();
+}
 
 Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
 	: m_HWnd{ hwnd }
@@ -204,14 +216,14 @@ void DirectX11::RenderTestTriangle()
 	// PS
 	ComPtr<ID3D11PixelShader> pPixelShader;
 	ComPtr<ID3DBlob> pBlob;
-	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestPixelShader.cso", &pBlob));
+	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestPS.cso", &pBlob));
 	PGWND_THROW_IF_FAILED(m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 
 	m_pDeviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
 	// VS
 	ComPtr<ID3D11VertexShader> pVertexShader;
-	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestVertexShader.cso", &pBlob));
+	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestVS.cso", &pBlob));
 	PGWND_THROW_IF_FAILED(m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
 
 	m_pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
@@ -236,6 +248,16 @@ void DirectX11::RenderTestTriangle()
 Renderer::~Renderer()
 {
 	delete m_pRendererImpl;
+}
+
+void* Renderer::GetDevice() const
+{
+	return m_pRendererImpl->GetDevice();
+}
+
+void* Renderer::GetDeviceContext() const
+{
+	return m_pRendererImpl->GetDeviceContext();
 }
 
 void Renderer::Init()

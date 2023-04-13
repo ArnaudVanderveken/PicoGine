@@ -16,6 +16,9 @@ public:
 	Renderer(Renderer&& other) noexcept = delete;
 	Renderer& operator=(Renderer&& other) noexcept = delete;
 
+	void* GetDevice() const;
+	void* GetDeviceContext() const;
+
 	void Init();
 	void BeginFrame() const;
 	void EndFrame() const;
