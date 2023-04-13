@@ -1,7 +1,5 @@
 #pragma once
 
-#include <DirectXMath.h>
-
 class GameObject;
 
 class Transform
@@ -19,22 +17,22 @@ public:
 	 * \brief 
 	 * \return Position vector
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT3& GetPosition() const;
+	[[nodiscard]] const XMFLOAT3& GetPosition() const;
 	/**
 	 * \brief 
 	 * \return Rotation quaternion
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT4& GetRotation() const;
+	[[nodiscard]] const XMFLOAT4& GetRotation() const;
 	/**
 	 * \brief 
 	 * \return Scale vector
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT3& GetScale() const;
+	[[nodiscard]] const XMFLOAT3& GetScale() const;
 	/**
 	 * \brief 
 	 * \return Transform matrix
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT4X4& GetTransform();
+	[[nodiscard]] const XMFLOAT4X4& GetTransform();
 	/**
 	 * \brief Get dirty flag
 	 * \return 
@@ -45,17 +43,17 @@ public:
 	 * \brief 
 	 * \return Transform's forward unit vector as XMFLOAT3
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT3& GetForward();
+	[[nodiscard]] const XMFLOAT3& GetForward();
 	/**
 	 * \brief 
 	 * \return Transform's right unit vector as XMFLOAT3
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT3& GetRight();
+	[[nodiscard]] const XMFLOAT3& GetRight();
 	/**
 	 * \brief
 	 * \return Transform's up unit vector as XMFLOAT3
 	 */
-	[[nodiscard]] const DirectX::XMFLOAT3& GetUp();
+	[[nodiscard]] const XMFLOAT3& GetUp();
 
 	/**
 	 * \brief Set position vector
@@ -68,12 +66,12 @@ public:
 	 * \brief Set position vector
 	 * \param position Position vector as XMFLOAT3
 	 */
-	virtual void SetPosition(const DirectX::XMFLOAT3& position);
+	virtual void SetPosition(const XMFLOAT3& position);
 	/**
 	 * \brief Set position vector
 	 * \param position Position vector as XMVECTOR
 	 */
-	virtual void SetPosition(const DirectX::XMVECTOR& position);
+	virtual void SetPosition(const XMVECTOR& position);
 
 	/**
 	 * \brief Set rotation quaternion from Euler angles
@@ -88,17 +86,17 @@ public:
 	 * \param rotation Euler angles around x- y- and z-axis
 	 * \param isDegree Toggle between degrees and radians, degrees by default
 	 */
-	virtual void SetRotation(const DirectX::XMFLOAT3& rotation, bool isDegree = true);
+	virtual void SetRotation(const XMFLOAT3& rotation, bool isDegree = true);
 	/**
 	 * \brief Set rotation quaternion
 	 * \param rotation Rotation quaternion as XMFLOAT4
 	 */
-	virtual void SetRotation(const DirectX::XMFLOAT4& rotation);
+	virtual void SetRotation(const XMFLOAT4& rotation);
 	/**
 	 * \brief Set rotation quaternion
 	 * \param rotation Rotation quaternion as XMVECTOR
 	 */
-	virtual void SetRotation(const DirectX::XMVECTOR& rotation);
+	virtual void SetRotation(const XMVECTOR& rotation);
 
 	/**
 	 * \brief Set scale vector
@@ -116,31 +114,31 @@ public:
 	 * \brief Set scale vector
 	 * \param scale Scale vector as XMFLOAT3
 	 */
-	virtual void SetScale(const DirectX::XMFLOAT3& scale);
+	virtual void SetScale(const XMFLOAT3& scale);
 
 	/**
 	 * \brief Set transform matrix.
 	 * \param transform New transform as XMFLOAT4X4
 	 */
-	virtual void SetTransform(const DirectX::XMFLOAT4X4& transform);
+	virtual void SetTransform(const XMFLOAT4X4& transform);
 	/**
 	 * \brief Set transform matrix.
 	 * \param transform New transform as XMMATRIX
 	 */
-	virtual void SetTransform(const DirectX::XMMATRIX& transform);
+	virtual void SetTransform(const XMMATRIX& transform);
 	/**
 	 * \brief Set transform matrix.
 	 * \param position Position vector as XMFLOAT3
 	 * \param rotation Rotation quaternion as XMFLOAT4
 	 * \param scale Scale vector as XMFLOAT3
 	 */
-	virtual void SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale);
+	virtual void SetTransform(const XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale);
 
 	// World constants
 
-	inline static constexpr DirectX::XMFLOAT3 WORLD_FORWARD{ 0.f, 0.f, 1.f };
-	inline static constexpr DirectX::XMFLOAT3 WORLD_RIGHT{ 1.f, 0.f, 0.f };
-	inline static constexpr DirectX::XMFLOAT3 WORLD_UP{ 0.f, 1.f, 0.f };
+	inline static constexpr XMFLOAT3 WORLD_FORWARD{ 0.f, 0.f, 1.f };
+	inline static constexpr XMFLOAT3 WORLD_RIGHT{ 1.f, 0.f, 0.f };
+	inline static constexpr XMFLOAT3 WORLD_UP{ 0.f, 1.f, 0.f };
 
 protected:
 	GameObject* m_pOwner{};
@@ -148,17 +146,17 @@ protected:
 private:
 	/* DATA MEMBERS */
 
-	DirectX::XMFLOAT3 m_Position{ 0.f, 0.f, 0.f };
-	DirectX::XMFLOAT4 m_Rotation{ 0.f, 0.f, 0.f, 1.f };
-	DirectX::XMFLOAT3 m_Scale{ 1.f, 1.f, 1.f };
+	XMFLOAT3 m_Position{ 0.f, 0.f, 0.f };
+	XMFLOAT4 m_Rotation{ 0.f, 0.f, 0.f, 1.f };
+	XMFLOAT3 m_Scale{ 1.f, 1.f, 1.f };
 
-	DirectX::XMFLOAT4X4 m_Transform;
+	XMFLOAT4X4 m_Transform;
 
-	DirectX::XMFLOAT3 m_Forward{};
+	XMFLOAT3 m_Forward{};
 	bool m_DirtyForward{};
-	DirectX::XMFLOAT3 m_Right{};
+	XMFLOAT3 m_Right{};
 	bool m_DirtyRight{};
-	DirectX::XMFLOAT3 m_Up{};
+	XMFLOAT3 m_Up{};
 	bool m_DirtyUp{};
 
 	bool m_DirtyTransform{ true };
@@ -196,12 +194,12 @@ public:
 	 * \brief Set position vector
 	 * \param position Position vector as XMFLOAT3
 	 */
-	void SetPosition(const DirectX::XMFLOAT3& position) override;
+	void SetPosition(const XMFLOAT3& position) override;
 	/**
 	 * \brief Set position vector
 	 * \param position Position vector as XMVECTOR
 	 */
-	void SetPosition(const DirectX::XMVECTOR& position) override;
+	void SetPosition(const XMVECTOR& position) override;
 
 	/**
 	 * \brief Set rotation quaternion from Euler angles
@@ -216,17 +214,17 @@ public:
 	 * \param rotation Euler angles around x- y- and z-axis
 	 * \param isDegree Toggle between degrees and radians, degrees by default
 	 */
-	void SetRotation(const DirectX::XMFLOAT3& rotation, bool isDegree = true) override;
+	void SetRotation(const XMFLOAT3& rotation, bool isDegree = true) override;
 	/**
 	 * \brief Set rotation quaternion
 	 * \param rotation Rotation quaternion as XMFLOAT4
 	 */
-	void SetRotation(const DirectX::XMFLOAT4& rotation) override;
+	void SetRotation(const XMFLOAT4& rotation) override;
 	/**
 	 * \brief Set rotation quaternion
 	 * \param rotation Rotation quaternion as XMVECTOR
 	 */
-	void SetRotation(const DirectX::XMVECTOR& rotation) override;
+	void SetRotation(const XMVECTOR& rotation) override;
 
 	/**
 	 * \brief Set scale vector
@@ -244,25 +242,25 @@ public:
 	 * \brief Set scale vector
 	 * \param scale Scale vector as XMFLOAT3
 	 */
-	void SetScale(const DirectX::XMFLOAT3& scale) override;
+	void SetScale(const XMFLOAT3& scale) override;
 
 	/**
 	 * \brief Set transform matrix.
 	 * \param transform New transform as XMFLOAT4X4
 	 */
-	void SetTransform(const DirectX::XMFLOAT4X4& transform) override;
+	void SetTransform(const XMFLOAT4X4& transform) override;
 	/**
 	 * \brief Set transform matrix.
 	 * \param transform New transform as XMMATRIX
 	 */
-	void SetTransform(const DirectX::XMMATRIX& transform) override;
+	void SetTransform(const XMMATRIX& transform) override;
 	/**
 	 * \brief Set transform matrix.
 	 * \param position Position vector as XMFLOAT3
 	 * \param rotation Rotation quaternion as XMFLOAT4
 	 * \param scale Scale vector as XMFLOAT3
 	 */
-	void SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale) override;
+	void SetTransform(const XMFLOAT3& position, const XMFLOAT4& rotation, const XMFLOAT3& scale) override;
 
 private:
 	void SetWorldTransformDirty() const;

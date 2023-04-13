@@ -10,7 +10,10 @@
 #define WIDE1(x) WIDE2(x)
 #define __WFILE__ WIDE1(__FILE__)
 
+#include <DirectXMath.h>
 #include <iostream>
 #include <memory>
 #include <sstream>
 #include <wrl.h> //ComPtr
+
+using namespace DirectX;

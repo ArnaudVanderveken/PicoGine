@@ -1,7 +1,6 @@
 #include "Transform.h"
 #include "GameObject.h"
 
-using namespace DirectX;
 
 Transform::Transform(GameObject* owner) noexcept
 	: m_pOwner(owner)
@@ -136,18 +135,18 @@ void Transform::SetScale(const XMFLOAT3& scale)
 	m_DirtyTransform = true;
 }
 
-void Transform::SetTransform(const DirectX::XMFLOAT4X4& transform)
+void Transform::SetTransform(const XMFLOAT4X4& transform)
 {
 	m_Transform = transform;
 	UnpackVectors();
 }
 
-void Transform::SetTransform(const DirectX::XMMATRIX& transform)
+void Transform::SetTransform(const XMMATRIX& transform)
 {
 	XMStoreFloat4x4(&m_Transform, transform);
 }
 
-void Transform::SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation, const DirectX::XMFLOAT3& scale)
+void Transform::SetTransform(const XMFLOAT3& position, const XMFLOAT4& rotation, const XMFLOAT3& scale)
 {
 	m_Position = position;
 	m_Rotation = rotation;
@@ -212,13 +211,13 @@ void LocalTransform::SetPosition(float x, float y, float z)
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetPosition(const DirectX::XMFLOAT3& position)
+void LocalTransform::SetPosition(const XMFLOAT3& position)
 {
 	Transform::SetPosition(position);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetPosition(const DirectX::XMVECTOR& position)
+void LocalTransform::SetPosition(const XMVECTOR& position)
 {
 	Transform::SetPosition(position);
 	SetWorldTransformDirty();
@@ -230,19 +229,19 @@ void LocalTransform::SetRotation(float x, float y, float z, bool isDegree)
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetRotation(const DirectX::XMFLOAT3& rotation, bool isDegree)
+void LocalTransform::SetRotation(const XMFLOAT3& rotation, bool isDegree)
 {
 	Transform::SetRotation(rotation, isDegree);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetRotation(const DirectX::XMFLOAT4& rotation)
+void LocalTransform::SetRotation(const XMFLOAT4& rotation)
 {
 	Transform::SetRotation(rotation);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetRotation(const DirectX::XMVECTOR& rotation)
+void LocalTransform::SetRotation(const XMVECTOR& rotation)
 {
 	Transform::SetRotation(rotation);
 	SetWorldTransformDirty();
@@ -260,26 +259,25 @@ void LocalTransform::SetScale(float s)
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetScale(const DirectX::XMFLOAT3& scale)
+void LocalTransform::SetScale(const XMFLOAT3& scale)
 {
 	Transform::SetScale(scale);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetTransform(const DirectX::XMFLOAT4X4& transform)
+void LocalTransform::SetTransform(const XMFLOAT4X4& transform)
 {
 	Transform::SetTransform(transform);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetTransform(const DirectX::XMMATRIX& transform)
+void LocalTransform::SetTransform(const XMMATRIX& transform)
 {
 	Transform::SetTransform(transform);
 	SetWorldTransformDirty();
 }
 
-void LocalTransform::SetTransform(const DirectX::XMFLOAT3& position, const DirectX::XMFLOAT4& rotation,
-	const DirectX::XMFLOAT3& scale)
+void LocalTransform::SetTransform(const XMFLOAT3& position, const XMFLOAT4& rotation, const XMFLOAT3& scale)
 {
 	Transform::SetTransform(position, rotation, scale);
 	SetWorldTransformDirty();

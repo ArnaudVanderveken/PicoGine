@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "GameSettings.h"
 
-using namespace DirectX;
 
 CameraComponent::CameraComponent() noexcept
 	: m_Size{ 25.f }
@@ -65,27 +64,27 @@ void CameraComponent::Render()
 {
 }
 
-const DirectX::XMFLOAT4X4& CameraComponent::GetView() const
+const XMFLOAT4X4& CameraComponent::GetView() const
 {
 	return m_View;
 }
 
-const DirectX::XMFLOAT4X4& CameraComponent::GetProjection() const
+const XMFLOAT4X4& CameraComponent::GetProjection() const
 {
 	return m_Projection;
 }
 
-const DirectX::XMFLOAT4X4& CameraComponent::GetViewProjection() const
+const XMFLOAT4X4& CameraComponent::GetViewProjection() const
 {
 	return m_ViewProjection;
 }
 
-const DirectX::XMFLOAT4X4& CameraComponent::GetViewInverse() const
+const XMFLOAT4X4& CameraComponent::GetViewInverse() const
 {
 	return m_ViewInverse;
 }
 
-const DirectX::XMFLOAT4X4& CameraComponent::GetViewProjectionInverse() const
+const XMFLOAT4X4& CameraComponent::GetViewProjectionInverse() const
 {
 	return m_ViewProjectionInverse;
 }

@@ -4,12 +4,10 @@
 #pragma comment(lib, "d3d11.lib")
 #include <d3dcompiler.h>
 #pragma comment(lib, "d3dcompiler.lib")
-#include <DirectXMath.h>
 
 #include "Renderer.h"
 
 using Microsoft::WRL::ComPtr;
-using namespace DirectX;
 
 class ColorMaterial::ColorMaterialImpl
 {

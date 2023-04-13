@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseMaterial.h"
-#include <DirectXMath.h>
 
 class ColorMaterial final : public BaseMaterial
 {
@@ -17,7 +16,7 @@ public:
 	ColorMaterial& operator=(ColorMaterial&& other) noexcept = delete;
 
 	void Bind() override;
-	void SetColor(const DirectX::XMFLOAT4& color) const;
+	void SetColor(const XMFLOAT4& color) const;
 	void SetColor(float r, float g, float b, float a = 1) const;
 
 private:

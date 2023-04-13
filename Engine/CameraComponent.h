@@ -1,7 +1,5 @@
 #pragma once
 
-#include <DirectXMath.h>
-
 #include "BaseComponent.h"
 
 class CameraComponent final : public BaseComponent
@@ -20,20 +18,20 @@ public:
 	void LateUpdate() override;
 	void Render() override;
 
-	const DirectX::XMFLOAT4X4& GetView() const;
-	const DirectX::XMFLOAT4X4& GetProjection() const;
-	const DirectX::XMFLOAT4X4& GetViewProjection() const;
-	const DirectX::XMFLOAT4X4& GetViewInverse() const;
-	const DirectX::XMFLOAT4X4& GetViewProjectionInverse() const;
+	const XMFLOAT4X4& GetView() const;
+	const XMFLOAT4X4& GetProjection() const;
+	const XMFLOAT4X4& GetViewProjection() const;
+	const XMFLOAT4X4& GetViewInverse() const;
+	const XMFLOAT4X4& GetViewProjectionInverse() const;
 
 private:
 	/* DATA MEMBERS */
 
-	DirectX::XMFLOAT4X4 m_View{};
-	DirectX::XMFLOAT4X4 m_Projection{};
-	DirectX::XMFLOAT4X4 m_ViewInverse{};
-	DirectX::XMFLOAT4X4 m_ViewProjection{};
-	DirectX::XMFLOAT4X4 m_ViewProjectionInverse{};
+	XMFLOAT4X4 m_View{};
+	XMFLOAT4X4 m_Projection{};
+	XMFLOAT4X4 m_ViewInverse{};
+	XMFLOAT4X4 m_ViewProjection{};
+	XMFLOAT4X4 m_ViewProjectionInverse{};
 
 	float m_Size;
 	bool m_PerspectiveProjection{ true };
