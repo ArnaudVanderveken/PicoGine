@@ -7,9 +7,6 @@
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\BaseMaterial.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\CameraComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

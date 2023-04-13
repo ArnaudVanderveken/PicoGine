@@ -8,6 +8,8 @@
 #include "WindowsException.h"
 #include "WindowHandler.h"
 
+#include "ColorMaterial.h"
+
 using Microsoft::WRL::ComPtr;
 
 class Renderer::RendererImpl
@@ -160,7 +162,6 @@ void DirectX11::RenderTestTriangle()
 	struct TestVertex
 	{
 		float x{}, y{};
-		unsigned char r{}, g{}, b{}, a{};
 	};
 
 	// Vertex Buffer
@@ -168,9 +169,9 @@ void DirectX11::RenderTestTriangle()
 
 	constexpr TestVertex vertices[] =
 	{
-		{ .0f, .5f, 255, 0, 0, 255 },
-		{ .5f, -.5f, 0, 255, 0, 255 },
-		{ -.5f, -.5f, 0, 0, 255, 255 }
+		{ .0f, .5f},
+		{ .5f, -.5f},
+		{ -.5f, -.5f}
 	};
 
 	D3D11_BUFFER_DESC vbDesc{};
@@ -213,33 +214,13 @@ void DirectX11::RenderTestTriangle()
 
 	m_pDeviceContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
 
-	// PS
-	ComPtr<ID3D11PixelShader> pPixelShader;
-	ComPtr<ID3DBlob> pBlob;
-	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestPS.cso", &pBlob));
-	PGWND_THROW_IF_FAILED(m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
-
-	m_pDeviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
-
-	// VS
-	ComPtr<ID3D11VertexShader> pVertexShader;
-	PGWND_THROW_IF_FAILED(D3DReadFileToBlob(L"../Engine/Shaders/TestVS.cso", &pBlob));
-	PGWND_THROW_IF_FAILED(m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
-
-	m_pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
-
 	// IA
 	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	ComPtr<ID3D11InputLayout> pInputLayout;
-	const D3D11_INPUT_ELEMENT_DESC ied[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, 8u, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-	};
-	PGWND_THROW_IF_FAILED(m_pDevice->CreateInputLayout(ied, UINT(std::size(ied)), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout));
-
-	m_pDeviceContext->IASetInputLayout(pInputLayout.Get());
+	// Material
+	const auto pMaterial = std::make_unique<ColorMaterial>();
+	pMaterial->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+	pMaterial->Bind();
 
 	//m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
 	m_pDeviceContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);

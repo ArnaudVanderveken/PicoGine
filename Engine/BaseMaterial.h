@@ -11,11 +11,6 @@ public:
 	BaseMaterial(BaseMaterial&& other) noexcept = delete;
 	BaseMaterial& operator=(BaseMaterial&& other) noexcept = delete;
 
-	virtual void Bind();
+	virtual void Bind() = 0;
 
-private:
-	/* DATA MEMBERS */
-
-	/* PRIVATE METHODS */
-	
 };

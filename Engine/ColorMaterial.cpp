@@ -7,7 +7,6 @@
 #include <DirectXMath.h>
 
 #include "Renderer.h"
-#include "WindowsException.h"
 
 using Microsoft::WRL::ComPtr;
 using namespace DirectX;
@@ -24,12 +23,9 @@ public:
 	ColorMaterialImpl& operator=(ColorMaterialImpl&& other) noexcept = delete;
 
 	virtual void Bind() = 0;
+	virtual void SetColor(const XMFLOAT4& color) = 0;
+	virtual void SetColor(float r, float g, float b, float a = 1) = 0;
 
-private:
-	/* DATA MEMBERS */
-
-	/* PRIVATE METHODS */
-	
 };
 
 class DX11ColorMaterial final : public ColorMaterial::ColorMaterialImpl
@@ -44,8 +40,8 @@ public:
 	DX11ColorMaterial& operator=(DX11ColorMaterial&& other) noexcept = delete;
 
 	void Bind() override;
-	void SetColor(const XMFLOAT4& color);
-	void SetColor(float r, float g, float b, float a = 1);
+	void SetColor(const XMFLOAT4& color) override;
+	void SetColor(float r, float g, float b, float a = 1) override;
 
 private:
 	/* STRUCTS */
@@ -143,4 +139,29 @@ void DX11ColorMaterial::UpdateBuffer() const
 	memcpy(data, &m_PSConstantBufferData, sizeof(PSConstantBufferData));
 
 	deviceContext->Unmap(m_pPSConstantBuffer.Get(), 0);
+}
+
+ColorMaterial::ColorMaterial() noexcept
+{
+	m_pColorMaterialImpl = new DX11ColorMaterial();
+}
+
+ColorMaterial::~ColorMaterial()
+{
+	delete m_pColorMaterialImpl;
+}
+
+void ColorMaterial::Bind()
+{
+	m_pColorMaterialImpl->Bind();
+}
+
+void ColorMaterial::SetColor(const XMFLOAT4& color) const
+{
+	m_pColorMaterialImpl->SetColor(color);
+}
+
+void ColorMaterial::SetColor(float r, float g, float b, float a) const
+{
+	m_pColorMaterialImpl->SetColor(r, g, b, a);
 }

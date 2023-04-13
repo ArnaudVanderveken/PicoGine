@@ -1,6 +1,6 @@
 add_library(Engine 
 	BaseComponent.h BaseComponent.cpp
-	BaseMaterial.h BaseMaterial.cpp
+	BaseMaterial.h
 	CameraComponent.h CameraComponent.cpp
 	CleanedWindows.h
 	ColorMaterial.h ColorMaterial.cpp
