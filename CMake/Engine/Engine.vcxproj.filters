@@ -23,7 +23,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\MaterialManager.cpp">
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.cpp">
       <Filter>Source Files</Filter>
@@ -32,10 +35,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\SceneManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\TimeManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Managers</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\vande\Desktop\PicoGine\Engine\Transform.cpp">
       <Filter>Source Files</Filter>
@@ -79,7 +82,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\InputManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\MaterialManager.h">
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\PicoGineException.h">
       <Filter>Header Files</Filter>
@@ -88,7 +94,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\SceneManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Singleton.h">
       <Filter>Header Files</Filter>
@@ -97,7 +103,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\TimeManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Managers</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\vande\Desktop\PicoGine\Engine\Transform.h">
       <Filter>Header Files</Filter>
@@ -141,6 +147,9 @@
   <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{EFBC0A36-FA32-33DB-A660-3E8257D0F954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Managers">
+      <UniqueIdentifier>{62878631-ED0D-32DB-9C0B-9CCB9E907FAC}</UniqueIdentifier>
     </Filter>
     <Filter Include="Materials">
       <UniqueIdentifier>{D2936652-FF94-346B-AA43-4D2E6D22BA65}</UniqueIdentifier>

@@ -8,7 +8,6 @@ class Renderer final : public Singleton<Renderer>
 public:
 	class RendererImpl;
 
-	Renderer() noexcept = default;
 	~Renderer() override;
 
 	Renderer(const Renderer& other) noexcept = delete;
@@ -25,7 +24,12 @@ public:
 
 	void RenderTestTriangle() const;
 
+protected:
+
 private:
+	friend class Singleton<Renderer>;
+	Renderer() noexcept = default;
+
 	/* DATA MEMBERS */
 
 	RendererImpl* m_pRendererImpl{};
