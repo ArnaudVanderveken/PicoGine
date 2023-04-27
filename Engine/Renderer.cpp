@@ -1,16 +1,26 @@
 #include "Renderer.h"
 
 #include "CleanedWindows.h"
+
 #include <d3d11.h>
-#pragma comment(lib, "d3d11.lib")
 #include <d3dcompiler.h>
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
+
+#include <d3d12.h>
+#include <dxgi1_6.h>
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib")
+
+#include "GameSettings.h"
 #include "WindowsException.h"
 #include "WindowHandler.h"
 
 #include "ColorMaterial.h"
 
 using Microsoft::WRL::ComPtr;
+
+#pragma region Pimpl
 
 class Renderer::RendererImpl
 {
@@ -40,6 +50,15 @@ protected:
 	inline static bool m_VSyncEnabled{ GameSettings::useVSync };
 	
 };
+
+Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
+	: m_HWnd{ hwnd }
+{
+}
+
+#pragma endregion
+
+#pragma region DX11
 
 class DirectX11 final : public Renderer::RendererImpl
 {
@@ -72,22 +91,7 @@ private:
 	
 };
 
-void* DirectX11::GetDevice() const
-{
-	return m_pDevice.Get();
-}
-
-void* DirectX11::GetDeviceContext() const
-{
-	return m_pDeviceContext.Get();
-}
-
-Renderer::RendererImpl::RendererImpl(HWND hwnd) noexcept
-	: m_HWnd{ hwnd }
-{
-}
-
-DirectX11::DirectX11(HWND hwnd) : Renderer::RendererImpl{ hwnd }
+DirectX11::DirectX11(HWND hwnd) : RendererImpl{ hwnd }
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
 	swapChainDesc.BufferDesc.Width = 0;
@@ -144,6 +148,16 @@ DirectX11::DirectX11(HWND hwnd) : Renderer::RendererImpl{ hwnd }
 	m_pDeviceContext->RSSetViewports(1u, &vp);
 }
 
+void* DirectX11::GetDevice() const
+{
+	return m_pDevice.Get();
+}
+
+void* DirectX11::GetDeviceContext() const
+{
+	return m_pDeviceContext.Get();
+}
+
 void DirectX11::BeginFrame() const
 {
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), m_DefaultBackgroundColor);
@@ -167,7 +181,7 @@ void DirectX11::RenderTestTriangle()
 	// Vertex Buffer
 	ComPtr<ID3D11Buffer> pVertexBuffer;
 
-	constexpr TestVertex vertices[] =
+	static constexpr TestVertex vertices[] =
 	{
 		{ .0f, .5f},
 		{ .5f, -.5f},
@@ -223,8 +237,162 @@ void DirectX11::RenderTestTriangle()
 	pMaterial->Bind();
 
 	//m_pDeviceContext->Draw(UINT(std::size(vertices)), 0u);
-	m_pDeviceContext->DrawIndexed((UINT)std::size(indices), 0u, 0u);
+	m_pDeviceContext->DrawIndexed(static_cast<UINT>(std::size(indices)), 0u, 0u);
 }
+
+#pragma endregion
+
+#pragma region DX12
+
+class DirectX12 final: public Renderer::RendererImpl
+{
+public:
+	explicit DirectX12(HWND hWnd);
+	~DirectX12() override;
+
+	DirectX12(const DirectX12& other) = delete;
+	DirectX12& operator=(const DirectX12& other) noexcept = delete;
+	DirectX12(DirectX12&& other) = delete;
+	DirectX12& operator=(DirectX12&& other) noexcept = delete;
+
+	void* GetDevice() const override;
+	void* GetDeviceContext() const override;
+
+	void BeginFrame() const override;
+	void EndFrame() const override;
+
+	void RenderTestTriangle() override;
+
+private:
+	/* DATA MEMBERS */
+
+	ComPtr<ID3D12Device8> m_pDevice{};
+	ComPtr<IDXGISwapChain> m_pSwapChain{};
+	ComPtr<ID3D11DeviceContext> m_pDeviceContext{};
+	ComPtr<ID3D11RenderTargetView> m_pRenderTargetView{};
+
+	/* PRIVATE METHODS */
+
+	ComPtr<IDXGIAdapter4> FindBestAdapter(IDXGIFactory7* pDXGIFactory, D3D_FEATURE_LEVEL minFeatureLevel) const;
+	D3D_FEATURE_LEVEL FindMaxFeatureLevel(IDXGIAdapter4* pAdapter) const;
+	
+};
+
+DirectX12::DirectX12(HWND hWnd) : RendererImpl{ hWnd }
+{
+	ComPtr<IDXGIFactory7> pDXGIFactory;
+
+	UINT DXGIFactoryFlags{};
+
+#ifdef _DEBUG
+	{
+		ComPtr<ID3D12Debug3> pDebugInterface;
+		PGWND_THROW_IF_FAILED(D3D12GetDebugInterface(IID_PPV_ARGS(&pDebugInterface)));
+		pDebugInterface->EnableDebugLayer();
+
+		DXGIFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+	}
+#endif
+
+	PGWND_THROW_IF_FAILED(CreateDXGIFactory2(DXGIFactoryFlags, IID_PPV_ARGS(&pDXGIFactory)));
+
+	const ComPtr<IDXGIAdapter4> pDXGIAdapter = FindBestAdapter(pDXGIFactory.Get(), D3D_FEATURE_LEVEL_11_0);
+
+	const D3D_FEATURE_LEVEL maxFeatureLevel = FindMaxFeatureLevel(pDXGIAdapter.Get());
+
+	PGWND_THROW_IF_FAILED(D3D12CreateDevice(pDXGIAdapter.Get(), maxFeatureLevel, IID_PPV_ARGS(&m_pDevice)));
+
+#ifdef _DEBUG
+	{
+		ComPtr<ID3D12InfoQueue> pInfoQueue;
+		PGWND_THROW_IF_FAILED(m_pDevice->QueryInterface(IID_PPV_ARGS(&pInfoQueue)));
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+	}
+#endif
+}
+
+DirectX12::~DirectX12()
+{
+#ifdef _DEBUG
+	{
+		ComPtr<ID3D12InfoQueue> pInfoQueue;
+		m_pDevice->QueryInterface(IID_PPV_ARGS(&pInfoQueue));
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, false);
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, false);
+		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
+	}
+#endif
+}
+
+
+void* DirectX12::GetDevice() const
+{
+	return m_pDevice.Get();
+}
+
+void* DirectX12::GetDeviceContext() const
+{
+	return m_pDeviceContext.Get();
+}
+
+void DirectX12::BeginFrame() const
+{
+	//m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), m_DefaultBackgroundColor);
+}
+
+void DirectX12::EndFrame() const
+{
+	/*if (m_VSyncEnabled)
+		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
+	else
+		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));*/
+}
+
+void DirectX12::RenderTestTriangle()
+{
+	
+}
+
+ComPtr<IDXGIAdapter4> DirectX12::FindBestAdapter(IDXGIFactory7* pDXGIFactory, D3D_FEATURE_LEVEL minFeatureLevel) const
+{
+	ComPtr<IDXGIAdapter4> pDXGIAdapter;
+
+	// Iterate over adapters in descending order of performance
+	for (UINT i{}; pDXGIFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&pDXGIAdapter)) != DXGI_ERROR_NOT_FOUND; ++i)
+		// Take first adapter that supports min feature level
+		if (SUCCEEDED(D3D12CreateDevice(pDXGIAdapter.Get(), minFeatureLevel, __uuidof(ID3D12Device), nullptr)))
+			return pDXGIAdapter;
+
+	return nullptr;
+}
+
+D3D_FEATURE_LEVEL DirectX12::FindMaxFeatureLevel(IDXGIAdapter4* pAdapter) const
+{
+	constexpr D3D_FEATURE_LEVEL featureLevels[]
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_11_1,
+		D3D_FEATURE_LEVEL_12_0,
+		D3D_FEATURE_LEVEL_12_1,
+		D3D_FEATURE_LEVEL_12_2
+	};
+
+	D3D12_FEATURE_DATA_FEATURE_LEVELS featureLevelInfo{};
+	featureLevelInfo.NumFeatureLevels = static_cast<UINT>(std::size(featureLevels));
+	featureLevelInfo.pFeatureLevelsRequested = featureLevels;
+
+	ComPtr<ID3D12Device> pDevice;
+	PGWND_THROW_IF_FAILED(D3D12CreateDevice(pAdapter, featureLevels[0], IID_PPV_ARGS(&pDevice)));
+	PGWND_THROW_IF_FAILED(pDevice->CheckFeatureSupport(D3D12_FEATURE_FEATURE_LEVELS, &featureLevelInfo, sizeof(featureLevelInfo)));
+
+	return featureLevelInfo.MaxSupportedFeatureLevel;
+}
+
+#pragma endregion
+
+#pragma region Renderer
 
 Renderer::~Renderer()
 {
@@ -243,7 +411,17 @@ void* Renderer::GetDeviceContext() const
 
 void Renderer::Init()
 {
-	m_pRendererImpl = new DirectX11{ WindowHandler::Get().GetHandle() };
+	switch (GameSettings::renderAPI)
+	{
+	case GameSettings::RenderAPI::DirectX11:
+		m_pRendererImpl = new DirectX11{ WindowHandler::Get().GetHandle() };
+		break;
+
+	case GameSettings::RenderAPI::DirectX12:
+		m_pRendererImpl = new DirectX12{ WindowHandler::Get().GetHandle() };
+		break;
+	}
+	
 }
 
 void Renderer::BeginFrame() const
@@ -260,3 +438,5 @@ void Renderer::RenderTestTriangle() const
 {
 	m_pRendererImpl->RenderTestTriangle();
 }
+
+#pragma endregion

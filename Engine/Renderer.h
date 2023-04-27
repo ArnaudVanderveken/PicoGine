@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameSettings.h"
 #include "Singleton.h"
 
 class Renderer final : public Singleton<Renderer>
