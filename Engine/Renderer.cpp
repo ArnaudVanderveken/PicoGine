@@ -264,6 +264,44 @@ public:
 	void RenderTestTriangle() override;
 
 private:
+	/* NESTED CLASSES */
+
+	class DX12Command final
+	{
+	public:
+		explicit DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type) noexcept;
+		~DX12Command() = default;
+
+		DX12Command(const DX12Command& other) noexcept = delete;
+		DX12Command& operator=(const DX12Command& other) noexcept = delete;
+		DX12Command(DX12Command&& other) noexcept = delete;
+		DX12Command& operator=(DX12Command&& other) noexcept = delete;
+
+		void BeginFrame();
+		void EndFrame();
+
+	private:
+		/* NESTED CLASSES */
+
+		struct CommandFrame final
+		{
+			ComPtr<ID3D12CommandAllocator> m_pAllocator;
+
+			void Wait();
+		};
+
+		/* DATA MEMBERS */
+
+		ComPtr<ID3D12CommandQueue> m_pCommandQueue;
+		ComPtr<ID3D12GraphicsCommandList6> m_pCommandList;
+		inline static constexpr int s_BufferCount{ 3 };
+		CommandFrame m_CommandFrames[s_BufferCount]{};
+		UINT m_FrameIndex{};
+
+		/* PRIVATE METHODS */
+
+	};
+
 	/* DATA MEMBERS */
 
 	ComPtr<ID3D12Device8> m_pDevice{};
@@ -339,20 +377,49 @@ void* DirectX12::GetDeviceContext() const
 
 void DirectX12::BeginFrame() const
 {
-	//m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView.Get(), m_DefaultBackgroundColor);
+	
 }
 
 void DirectX12::EndFrame() const
 {
-	/*if (m_VSyncEnabled)
-		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(1u, 0u));
-	else
-		PGWND_THROW_IF_FAILED(m_pSwapChain->Present(0u, 0u));*/
+	
 }
 
 void DirectX12::RenderTestTriangle()
 {
 	
+}
+
+DirectX12::DX12Command::DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type) noexcept
+{
+	D3D12_COMMAND_QUEUE_DESC desc{};
+	desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+	desc.NodeMask = 0;
+	desc.Priority = D3D12_COMMAND_QUEUE_PRIORITY_NORMAL;
+	desc.Type = type;
+	PGWND_THROW_IF_FAILED(pDevice->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_pCommandQueue)));
+
+	for (int i{}; i < s_BufferCount; ++i)
+		PGWND_THROW_IF_FAILED(pDevice->CreateCommandAllocator(type, IID_PPV_ARGS(&m_CommandFrames[i].m_pAllocator)));
+
+	PGWND_THROW_IF_FAILED(pDevice->CreateCommandList(0, type, m_CommandFrames[0].m_pAllocator.Get(), nullptr, IID_PPV_ARGS(&m_pCommandList)));
+	PGWND_THROW_IF_FAILED(m_pCommandList->Close());
+}
+
+void DirectX12::DX12Command::BeginFrame()
+{
+	auto& frame = m_CommandFrames[m_FrameIndex];
+	frame.Wait();
+	PGWND_THROW_IF_FAILED(frame.m_pAllocator->Reset());
+	PGWND_THROW_IF_FAILED(m_pCommandList->Reset(frame.m_pAllocator.Get(), nullptr));
+}
+
+void DirectX12::DX12Command::EndFrame()
+{
+	PGWND_THROW_IF_FAILED(m_pCommandList->Close());
+	m_pCommandQueue->ExecuteCommandLists(1, m_pCommandList.GetAddressOf());
+
+	m_FrameIndex = (m_FrameIndex + 1) % s_BufferCount;
 }
 
 ComPtr<IDXGIAdapter4> DirectX12::FindBestAdapter(IDXGIFactory7* pDXGIFactory, D3D_FEATURE_LEVEL minFeatureLevel) const
