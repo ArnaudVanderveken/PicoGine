@@ -269,16 +269,20 @@ private:
 	class DX12Command final
 	{
 	public:
-		explicit DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type) noexcept;
-		~DX12Command() = default;
+		explicit DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type);
+		~DX12Command();
 
 		DX12Command(const DX12Command& other) noexcept = delete;
 		DX12Command& operator=(const DX12Command& other) noexcept = delete;
 		DX12Command(DX12Command&& other) noexcept = delete;
 		DX12Command& operator=(DX12Command&& other) noexcept = delete;
 
-		void BeginFrame();
+		void BeginFrame() const;
 		void EndFrame();
+
+		[[nodiscard]] ID3D12CommandQueue* GetCommandQueue() const { return m_pCommandQueue.Get(); }
+		[[nodiscard]] ID3D12GraphicsCommandList6* GetCommandList() const { return m_pCommandList.Get(); }
+		[[nodiscard]] UINT GetFrameIndex() const { return m_FrameIndex; }
 
 	private:
 		/* NESTED CLASSES */
@@ -286,8 +290,9 @@ private:
 		struct CommandFrame final
 		{
 			ComPtr<ID3D12CommandAllocator> m_pAllocator;
+			UINT64 m_FenceValue{};
 
-			void Wait();
+			void Wait(HANDLE fenceEvent, ID3D12Fence1* pFence) const;
 		};
 
 		/* DATA MEMBERS */
@@ -298,6 +303,10 @@ private:
 		CommandFrame m_CommandFrames[s_BufferCount]{};
 		UINT m_FrameIndex{};
 
+		ComPtr<ID3D12Fence1> m_pFence;
+		UINT64 m_FenceValue{};
+		HANDLE m_FenceEvent{};
+
 		/* PRIVATE METHODS */
 
 	};
@@ -305,9 +314,8 @@ private:
 	/* DATA MEMBERS */
 
 	ComPtr<ID3D12Device8> m_pDevice{};
-	ComPtr<IDXGISwapChain> m_pSwapChain{};
-	ComPtr<ID3D11DeviceContext> m_pDeviceContext{};
-	ComPtr<ID3D11RenderTargetView> m_pRenderTargetView{};
+	//Factory??
+	std::unique_ptr<DX12Command> m_pCommand;
 
 	/* PRIVATE METHODS */
 
@@ -339,6 +347,8 @@ DirectX12::DirectX12(HWND hWnd) : RendererImpl{ hWnd }
 	const D3D_FEATURE_LEVEL maxFeatureLevel = FindMaxFeatureLevel(pDXGIAdapter.Get());
 
 	PGWND_THROW_IF_FAILED(D3D12CreateDevice(pDXGIAdapter.Get(), maxFeatureLevel, IID_PPV_ARGS(&m_pDevice)));
+
+	m_pCommand = std::make_unique<DX12Command>(m_pDevice.Get(), D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 #ifdef _DEBUG
 	{
@@ -372,17 +382,17 @@ void* DirectX12::GetDevice() const
 
 void* DirectX12::GetDeviceContext() const
 {
-	return m_pDeviceContext.Get();
+	return nullptr;
 }
 
 void DirectX12::BeginFrame() const
 {
-	
+	m_pCommand->BeginFrame();
 }
 
 void DirectX12::EndFrame() const
 {
-	
+	m_pCommand->EndFrame();
 }
 
 void DirectX12::RenderTestTriangle()
@@ -390,7 +400,7 @@ void DirectX12::RenderTestTriangle()
 	
 }
 
-DirectX12::DX12Command::DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type) noexcept
+DirectX12::DX12Command::DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_TYPE type)
 {
 	D3D12_COMMAND_QUEUE_DESC desc{};
 	desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
@@ -404,12 +414,30 @@ DirectX12::DX12Command::DX12Command(ID3D12Device8* pDevice, D3D12_COMMAND_LIST_T
 
 	PGWND_THROW_IF_FAILED(pDevice->CreateCommandList(0, type, m_CommandFrames[0].m_pAllocator.Get(), nullptr, IID_PPV_ARGS(&m_pCommandList)));
 	PGWND_THROW_IF_FAILED(m_pCommandList->Close());
+
+	PGWND_THROW_IF_FAILED(pDevice->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_pFence)));
+	m_FenceEvent = CreateEventEx(nullptr, nullptr, 0, EVENT_ALL_ACCESS);
 }
 
-void DirectX12::DX12Command::BeginFrame()
+DirectX12::DX12Command::~DX12Command()
 {
-	auto& frame = m_CommandFrames[m_FrameIndex];
-	frame.Wait();
+	for (UINT i{}; i < s_BufferCount; ++i)
+		m_CommandFrames[i].Wait(m_FenceEvent, m_pFence.Get());
+	m_FrameIndex = 0;
+	m_FenceValue = 0;
+	if (m_FenceEvent)
+	{
+		CloseHandle(m_FenceEvent);
+		m_FenceEvent = nullptr;
+	}
+		
+
+}
+
+void DirectX12::DX12Command::BeginFrame() const
+{
+	const auto& frame = m_CommandFrames[m_FrameIndex];
+	frame.Wait(m_FenceEvent, m_pFence.Get());
 	PGWND_THROW_IF_FAILED(frame.m_pAllocator->Reset());
 	PGWND_THROW_IF_FAILED(m_pCommandList->Reset(frame.m_pAllocator.Get(), nullptr));
 }
@@ -417,9 +445,24 @@ void DirectX12::DX12Command::BeginFrame()
 void DirectX12::DX12Command::EndFrame()
 {
 	PGWND_THROW_IF_FAILED(m_pCommandList->Close());
-	m_pCommandQueue->ExecuteCommandLists(1, m_pCommandList.GetAddressOf());
+	ID3D12CommandList* const commandLists[]{ m_pCommandList.Get() };
+	m_pCommandQueue->ExecuteCommandLists(_countof(commandLists), &commandLists[0]);
+
+	++m_FenceValue;
+	m_CommandFrames->m_FenceValue = m_FenceValue;
+
+	m_pCommandQueue->Signal(m_pFence.Get(), m_FenceValue);
 
 	m_FrameIndex = (m_FrameIndex + 1) % s_BufferCount;
+}
+
+void DirectX12::DX12Command::CommandFrame::Wait(HANDLE fenceEvent, ID3D12Fence1* pFence) const
+{
+	if (pFence->GetCompletedValue() < m_FenceValue)
+	{
+		PGWND_THROW_IF_FAILED(pFence->SetEventOnCompletion(m_FenceValue, fenceEvent));
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
 }
 
 ComPtr<IDXGIAdapter4> DirectX12::FindBestAdapter(IDXGIFactory7* pDXGIFactory, D3D_FEATURE_LEVEL minFeatureLevel) const
