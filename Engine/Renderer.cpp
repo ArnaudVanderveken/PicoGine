@@ -12,6 +12,10 @@
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib")
 
+#include <array>
+#include <vector>
+#include <mutex>
+
 #include "GameSettings.h"
 #include "WindowsException.h"
 #include "WindowHandler.h"
@@ -284,6 +288,8 @@ private:
 		[[nodiscard]] ID3D12GraphicsCommandList6* GetCommandList() const { return m_pCommandList.Get(); }
 		[[nodiscard]] UINT GetFrameIndex() const { return m_FrameIndex; }
 
+		inline static constexpr int s_BufferCount{ 3 };
+
 	private:
 		/* NESTED CLASSES */
 
@@ -299,7 +305,6 @@ private:
 
 		ComPtr<ID3D12CommandQueue> m_pCommandQueue;
 		ComPtr<ID3D12GraphicsCommandList6> m_pCommandList;
-		inline static constexpr int s_BufferCount{ 3 };
 		CommandFrame m_CommandFrames[s_BufferCount]{};
 		UINT m_FrameIndex{};
 
@@ -311,11 +316,72 @@ private:
 
 	};
 
+	struct DX12DescriptorHandle
+	{
+		D3D12_CPU_DESCRIPTOR_HANDLE m_CPUHandle{};
+		D3D12_GPU_DESCRIPTOR_HANDLE m_GPUHandle{};
+		constexpr bool IsValid() const { return m_CPUHandle.ptr != 0; }
+		constexpr bool IShaderVisible() const { return m_GPUHandle.ptr != 0; }
+	};
+
+	class DX12DescriptorHeap
+	{
+	public:
+		DX12DescriptorHeap(DirectX12* pDx12, D3D12_DESCRIPTOR_HEAP_TYPE type) noexcept;
+		~DX12DescriptorHeap();
+
+		DX12DescriptorHeap(const DX12DescriptorHeap& other) noexcept = delete;
+		DX12DescriptorHeap& operator=(const DX12DescriptorHeap& other) noexcept = delete;
+		DX12DescriptorHeap(DX12DescriptorHeap&& other) noexcept = delete;
+		DX12DescriptorHeap& operator=(DX12DescriptorHeap&& other) noexcept = delete;
+
+		void BeginFrame();
+
+		void Initialize(ID3D12Device8* pDevice, UINT capacity, bool isShaderVisible);
+		void Release();
+
+		[[nodiscard]] DX12DescriptorHandle Allocate();
+		void Free(DX12DescriptorHandle& handle);
+
+		[[nodiscard]] constexpr D3D12_DESCRIPTOR_HEAP_TYPE GetType() const { return m_Type; }
+		[[nodiscard]] constexpr D3D12_CPU_DESCRIPTOR_HANDLE GetCPUStart() const { return m_CPUStart; }
+		[[nodiscard]] constexpr D3D12_GPU_DESCRIPTOR_HANDLE GetGPUStart() const { return m_GPUStart; }
+		[[nodiscard]] ID3D12DescriptorHeap* GetHeap() const { return m_pDescriptorHeap.Get(); }
+		[[nodiscard]] constexpr UINT GetCapacity() const { return m_Capacity; }
+		[[nodiscard]] constexpr UINT GetSize() const { return m_Size; }
+		[[nodiscard]] constexpr UINT GetDescSize() const { return m_DescSize; }
+		[[nodiscard]] constexpr bool IsShaderVisible() const { return m_GPUStart.ptr != 0; }
+
+	private:
+		/* DATA MEMBERS */
+
+		DirectX12* m_pDx12{};
+		ComPtr<ID3D12DescriptorHeap> m_pDescriptorHeap;
+		D3D12_CPU_DESCRIPTOR_HANDLE m_CPUStart{};
+		D3D12_GPU_DESCRIPTOR_HANDLE m_GPUStart{};
+		std::unique_ptr<UINT[]> m_FreeHandles{};
+		std::array<std::vector<UINT>, DX12Command::s_BufferCount> m_DeferredFreeHandles{};
+		std::mutex m_Mutex;
+		UINT m_Capacity{};
+		UINT m_Size{};
+		UINT m_DescSize{};
+		const D3D12_DESCRIPTOR_HEAP_TYPE m_Type{};
+
+		/* PRIVATE METHODS */
+
+		void ProcessDeferredRelease(UINT frameIndex);
+
+	};
+
 	/* DATA MEMBERS */
 
 	ComPtr<ID3D12Device8> m_pDevice{};
 	//Factory??
 	std::unique_ptr<DX12Command> m_pCommand;
+	std::unique_ptr<DX12DescriptorHeap> m_pRTVDescHeap;
+	std::unique_ptr<DX12DescriptorHeap> m_pDSVDescHeap;
+	std::unique_ptr<DX12DescriptorHeap> m_pSRVDescHeap;
+	std::unique_ptr<DX12DescriptorHeap> m_pUAVDescHeap;
 
 	/* PRIVATE METHODS */
 
@@ -350,6 +416,16 @@ DirectX12::DirectX12(HWND hWnd) : RendererImpl{ hWnd }
 
 	m_pCommand = std::make_unique<DX12Command>(m_pDevice.Get(), D3D12_COMMAND_LIST_TYPE_DIRECT);
 
+	m_pRTVDescHeap = std::make_unique<DX12DescriptorHeap>(this, D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	m_pDSVDescHeap = std::make_unique<DX12DescriptorHeap>(this, D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+	m_pSRVDescHeap = std::make_unique<DX12DescriptorHeap>(this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	m_pUAVDescHeap = std::make_unique<DX12DescriptorHeap>(this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	m_pRTVDescHeap->Initialize(m_pDevice.Get(), 512, false);
+	m_pDSVDescHeap->Initialize(m_pDevice.Get(), 512, false);
+	m_pSRVDescHeap->Initialize(m_pDevice.Get(), 4096, true);
+	m_pUAVDescHeap->Initialize(m_pDevice.Get(), 512, false);
+
 #ifdef _DEBUG
 	{
 		ComPtr<ID3D12InfoQueue> pInfoQueue;
@@ -372,8 +448,12 @@ DirectX12::~DirectX12()
 		pInfoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
 	}
 #endif
-}
 
+	m_pRTVDescHeap->Release();
+	m_pDSVDescHeap->Release();
+	m_pSRVDescHeap->Release();
+	m_pUAVDescHeap->Release();
+}
 
 void* DirectX12::GetDevice() const
 {
@@ -388,6 +468,10 @@ void* DirectX12::GetDeviceContext() const
 void DirectX12::BeginFrame() const
 {
 	m_pCommand->BeginFrame();
+	m_pRTVDescHeap->BeginFrame();
+	m_pDSVDescHeap->BeginFrame();
+	m_pSRVDescHeap->BeginFrame();
+	m_pUAVDescHeap->BeginFrame();
 }
 
 void DirectX12::EndFrame() const
@@ -430,8 +514,6 @@ DirectX12::DX12Command::~DX12Command()
 		CloseHandle(m_FenceEvent);
 		m_FenceEvent = nullptr;
 	}
-		
-
 }
 
 void DirectX12::DX12Command::BeginFrame() const
@@ -463,6 +545,111 @@ void DirectX12::DX12Command::CommandFrame::Wait(HANDLE fenceEvent, ID3D12Fence1*
 		PGWND_THROW_IF_FAILED(pFence->SetEventOnCompletion(m_FenceValue, fenceEvent));
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
+}
+
+DirectX12::DX12DescriptorHeap::DX12DescriptorHeap(DirectX12* pDx12, D3D12_DESCRIPTOR_HEAP_TYPE type) noexcept
+	: m_pDx12{ pDx12 }
+	, m_Type{ type }
+{
+}
+
+DirectX12::DX12DescriptorHeap::~DX12DescriptorHeap()
+{
+	Release();
+}
+
+void DirectX12::DX12DescriptorHeap::BeginFrame()
+{
+	const UINT index{ m_pDx12->m_pCommand->GetFrameIndex() };
+	if (!m_DeferredFreeHandles[index].empty())
+		ProcessDeferredRelease(index);
+}
+
+void DirectX12::DX12DescriptorHeap::Initialize(ID3D12Device8* pDevice, UINT capacity, bool isShaderVisible)
+{
+	std::lock_guard lock{ m_Mutex };
+	assert(capacity && capacity < D3D12_MAX_SHADER_VISIBLE_DESCRIPTOR_HEAP_SIZE_TIER_2);
+	assert(!(m_Type == D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER && capacity > D3D12_MAX_SHADER_VISIBLE_SAMPLER_HEAP_SIZE));
+
+	if (m_Type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV || m_Type == D3D12_DESCRIPTOR_HEAP_TYPE_DSV)
+		isShaderVisible = false; // impossible to create a shader visible heap for these types -> overriding given parameter.
+
+	Release();
+
+	D3D12_DESCRIPTOR_HEAP_DESC desc{};
+	desc.Flags = isShaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	desc.NumDescriptors = capacity;
+	desc.Type = m_Type;
+	desc.NodeMask = 0;
+
+	PGWND_THROW_IF_FAILED(pDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_pDescriptorHeap)));
+
+	m_FreeHandles = std::move(std::make_unique<UINT[]>(capacity));
+
+	for (UINT i{}; i < capacity; ++i)
+		m_FreeHandles[i] = i;
+
+	m_Capacity = capacity;
+	m_Size = 0;
+	m_DescSize = pDevice->GetDescriptorHandleIncrementSize(m_Type);
+	m_CPUStart = m_pDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	m_GPUStart = isShaderVisible ? m_pDescriptorHeap->GetGPUDescriptorHandleForHeapStart() : D3D12_GPU_DESCRIPTOR_HANDLE{ 0 };
+}
+
+void DirectX12::DX12DescriptorHeap::Release()
+{
+	for (UINT i{}; i < DX12Command::s_BufferCount; ++i)
+		if (!m_DeferredFreeHandles[i].empty())
+			ProcessDeferredRelease(i);
+}
+
+DirectX12::DX12DescriptorHandle DirectX12::DX12DescriptorHeap::Allocate()
+{
+	std::lock_guard lock{ m_Mutex };
+
+	assert(m_pDescriptorHeap.Get());
+	assert(m_Size < m_Capacity);
+
+	const UINT index{ m_FreeHandles[m_Size] };
+	const UINT offset{ index * m_DescSize };
+	++m_Size;
+
+	DX12DescriptorHandle handle;
+	handle.m_CPUHandle.ptr = m_CPUStart.ptr + offset;
+	if (IsShaderVisible())
+		handle.m_GPUHandle.ptr = m_GPUStart.ptr + offset;
+
+	return handle;
+}
+
+void DirectX12::DX12DescriptorHeap::Free(DX12DescriptorHandle& handle)
+{
+	if (!handle.IsValid())
+		return;
+
+	std::lock_guard lock{ m_Mutex };
+	assert(m_pDescriptorHeap.Get() && m_Size);
+	assert(handle.m_CPUHandle.ptr >= m_CPUStart.ptr);
+	assert((handle.m_CPUHandle.ptr - m_CPUStart.ptr) % m_DescSize);
+
+	const UINT index{ UINT(handle.m_CPUHandle.ptr - m_CPUStart.ptr) / m_DescSize };
+	m_DeferredFreeHandles[m_pDx12->m_pCommand->GetFrameIndex()].emplace_back(index);
+
+	handle = {};
+}
+
+void DirectX12::DX12DescriptorHeap::ProcessDeferredRelease(UINT frameIndex)
+{
+	std::lock_guard lock{ m_Mutex };
+
+	assert(frameIndex < DX12Command::s_BufferCount);
+
+	for (const auto index : m_DeferredFreeHandles[frameIndex])
+	{
+		--m_Size;
+		m_FreeHandles[m_Size] = index;
+	}
+	m_DeferredFreeHandles[frameIndex].clear();
 }
 
 ComPtr<IDXGIAdapter4> DirectX12::FindBestAdapter(IDXGIFactory7* pDXGIFactory, D3D_FEATURE_LEVEL minFeatureLevel) const
